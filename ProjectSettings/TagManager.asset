@@ -3,7 +3,12 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - Fence
+  - Building
+  - Floor
+  - Collectable
+  - Platform
   layers:
   - Default
   - TransparentFX
