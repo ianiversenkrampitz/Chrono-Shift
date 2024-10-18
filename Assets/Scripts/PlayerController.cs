@@ -36,7 +36,7 @@ public class PlayerController : MonoBehaviour
     public float walkMaxVelocity = 2f;
     // maximum sprint velocity
     public float sprintMaxVelocity = 4f;
-    
+
     /*
     // speed at which model rotates into position
     public float modelSpeed = 10f;
@@ -46,7 +46,7 @@ public class PlayerController : MonoBehaviour
     */
 
     // is the player on the ground
-    private bool onGround = true;
+    public bool onGround;
     // is the player sprinting or walking
     private bool sprinting = false;
     // is the player actively moving;
@@ -116,8 +116,8 @@ public class PlayerController : MonoBehaviour
     // handles physics controlled movement
     private void FixedUpdate()
     {
-        // disallow the player to fall off the map
-        Deathfloor();
+        // disallow the player to fall off the map (replaced by other code, remove later)
+        //Deathfloor();
         // check if the player is on the ground or not
         OnGround();
         // move
@@ -268,7 +268,7 @@ public class PlayerController : MonoBehaviour
     {
         RaycastHit hit;
 
-        if (Physics.Raycast(transform.position, Vector3.down, out hit, 1.6f))
+        if (Physics.Raycast(transform.position, Vector3.down, out hit, 1.51f))
         {
             onGround = true;
         }
@@ -293,7 +293,7 @@ public class PlayerController : MonoBehaviour
     private void Jump()
     {
         // if the player is on the ground and presses the spacebar, jump
-        if (onGround && playerInputActions.PlayerActions.Jump.WasPerformedThisFrame())
+        if (onGround && playerInputActions.PlayerActions.Jump.IsPressed())
         {
             rigidBodyRef.AddForce(model.up * jumpForce, ForceMode.Impulse);
         }
@@ -324,7 +324,8 @@ public class PlayerController : MonoBehaviour
     }
 
     // checks if player has fallen off the floor and teleports them back to origin, resetting force
-    private void Deathfloor()
+    //replaced by other code, remove later
+    /*private void Deathfloor()
     {
         if (transform.position.y <= -15)
         {
@@ -336,5 +337,5 @@ public class PlayerController : MonoBehaviour
             rigidBodyRef.velocity = Vector3.zero;
             print("player died");
         }
-    }
+    }*/
 }
