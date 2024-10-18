@@ -9,6 +9,9 @@ TagManager:
   - Floor
   - Collectable
   - Platform
+  - Ground
+  - Death
+  - Checkpoint
   layers:
   - Default
   - TransparentFX
