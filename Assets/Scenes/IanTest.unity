@@ -386,8 +386,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   distanceZ: 13
   distanceY: -5
-  sensitivityX: 5
-  sensitivityY: 4
+  sensitivityX: 10
+  sensitivityY: 8
   player: {fileID: 58049396}
 --- !u!1 &467379533
 GameObject:
@@ -638,7 +638,7 @@ BoxCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 796751364}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: 5db4f963a642fdd48b840381ea7eb79b, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -743,7 +743,7 @@ BoxCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 798838491}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: 8d0cc83a38a90ce4eb5f2ce15bdf1cbe, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -848,7 +848,7 @@ BoxCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 868255138}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: 8d0cc83a38a90ce4eb5f2ce15bdf1cbe, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -967,10 +967,26 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 4318054279092342748, guid: 1e1ee91bec648714bae534eae87d0f90,
+        type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 13400000, guid: 3cca3c1b8a5dee3418e9ac95e4e9038d,
+        type: 2}
     - target: {fileID: 5013284739197511754, guid: 1e1ee91bec648714bae534eae87d0f90,
         type: 3}
       propertyPath: m_Name
       value: Player
+      objectReference: {fileID: 0}
+    - target: {fileID: 6500212569575949456, guid: 1e1ee91bec648714bae534eae87d0f90,
+        type: 3}
+      propertyPath: m_Constraints
+      value: 80
+      objectReference: {fileID: 0}
+    - target: {fileID: 6500212569575949456, guid: 1e1ee91bec648714bae534eae87d0f90,
+        type: 3}
+      propertyPath: m_CollisionDetection
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7365804151142054834, guid: 1e1ee91bec648714bae534eae87d0f90,
         type: 3}
@@ -1027,7 +1043,8 @@ PrefabInstance:
       propertyPath: cam
       value: 
       objectReference: {fileID: 332168458}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 7851331997285548630, guid: 1e1ee91bec648714bae534eae87d0f90, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []

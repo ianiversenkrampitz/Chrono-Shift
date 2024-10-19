@@ -4,8 +4,8 @@ using UnityEngine;
 // using UnityEngine.InputSystem;
  
 /// <summary>
-/// Monaghan, Devin
-/// 10/17/2024
+/// Monaghan, Devin, Iversen-Krampitz, Ian 
+/// 10/18/2024
 /// Handles deathfloor
 /// handles WASD movement
 /// handles jumping
@@ -50,7 +50,7 @@ public class PlayerController : MonoBehaviour
     // is the player sprinting or walking
     private bool sprinting = false;
     // is the player actively moving;
-    private bool moving = false;
+    public bool moving = false;
 
 
     /*
@@ -206,14 +206,26 @@ public class PlayerController : MonoBehaviour
         */
     }
 
-    // when player is not moving rapidly slow down
+    // when player is not moving rapidly slow down (only for x and z movement)
     private void SlowDown()
     {
         if (!Moving() && rigidBodyRef.velocity != Vector3.zero)
         {
-            rigidBodyRef.velocity /= slowSpeed;
+            // Store the y component to maintain it
+            float currentYVelocity = rigidBodyRef.velocity.y;
+
+            // Create a new Vector3 with scaled x and z components, and preserve y
+            Vector3 newVelocity = new Vector3(
+                rigidBodyRef.velocity.x / slowSpeed,
+                currentYVelocity,
+                rigidBodyRef.velocity.z / slowSpeed
+            );
+
+            // Assign the new velocity to the rigidbody
+            rigidBodyRef.velocity = newVelocity;
         }
     }
+   
 
     // get sprint input
     // when player starts sprinting enter sprinting state
