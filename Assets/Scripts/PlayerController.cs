@@ -4,8 +4,9 @@ using UnityEngine;
 // using UnityEngine.InputSystem;
  
 /// <summary>
-/// Monaghan, Devin, Iversen-Krampitz, Ian 
-/// 10/18/2024
+/// Monaghan, Devin
+/// Iversen-Krampitz, Ian 
+/// 10/19/2024
 /// Handles deathfloor
 /// handles WASD movement
 /// handles jumping
@@ -17,19 +18,14 @@ public class PlayerController : MonoBehaviour
     // movement speeds
     public float walkSpeed = 50f;
     public float sprintSpeed = 100f;
-    public float slowSpeed = 1.5f;
-
-    /*
-    public float floatSpeed = 20f;
-    */
+    public float slowSpeed = .01f;
 
     // gravity speed
     public float gravitySpeed = 15f;
     // power of jump
     public float jumpForce = 20f;
-
     // power of dash
-    public float dashForce = 10f;
+    public float dashForce = 30f;
     // power of sprint boost
     public float sprintForce = 2f;
     // maximum walk velocity
@@ -37,47 +33,29 @@ public class PlayerController : MonoBehaviour
     // maximum sprint velocity
     public float sprintMaxVelocity = 4f;
 
-    /*
-    // speed at which model rotates into position
-    public float modelSpeed = 10f;
-
-    // is the player actively jumping
-    private bool floating = false;
-    */
-
     // is the player on the ground
     public bool onGround;
     // is the player sprinting or walking
     private bool sprinting = false;
     // is the player actively moving;
     public bool moving = false;
+    // is the player actively dashing
+    public bool dashing = false;
+    // is the dash on cooldown
+    public bool dashCooldown = false;
 
+    // reference to rigidbody
+    public Rigidbody rigidBodyRef;
 
-    /*
-    // reference to treads model
-    [SerializeField] private Transform treads;
-    // reference to head model
-    [SerializeField] private Transform head;
-    */
-    // reference to treads model
+    // reference to model
     [SerializeField] private Transform model;
-
     // reference to camera
     [SerializeField] private Transform cam;
     // reference to inputs
     private PlayerInputActions playerInputActions;
-    // reference to rigidbody
-    private Rigidbody rigidBodyRef;
 
     // direction holds movement inputs converted into Vector3
     public Vector3 direction;
-    //spawnpoint for character
-    public Vector3 spawnPoint;
-
-    /*
-    // rotation of head model
-    private Quaternion headRotation;
-    */
 
     // Awake is called before the first frame update
     void Awake()
@@ -90,49 +68,27 @@ public class PlayerController : MonoBehaviour
         playerInputActions.Enable();
     }
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        spawnPoint = transform.position;
-        //creates spawnpoint
-    }
-
-    public void OnTriggerEnter(Collider other)
-    {
-        if (other.gameObject.CompareTag("Checkpoint"))
-        {
-            //changes spawnpoint to checkpoint's parent transform 
-            spawnPoint = other.transform.parent.position;
-            Debug.Log("hit new checkpoint");
-        }
-        if (other.gameObject.CompareTag("Death"))
-        {
-            transform.position = spawnPoint;
-            Debug.Log("died from bottomless pit");
-            //add stuff to subtract health/lives and reset other variables here
-        }
-    }
-
     // handles physics controlled movement
     private void FixedUpdate()
     {
-        // disallow the player to fall off the map (replaced by other code, remove later)
-        //Deathfloor();
         // check if the player is on the ground or not
         OnGround();
-        // move
-        Move();
-        // jump and float
+        // move when not dashing
+        if (!dashing)
+        {
+            Move();
+        }
+        // dash
+        Dash();
+        // jump
         Jump();
-        ///               is this necessary?? who knows?
+                      /// is this necessary?? who knows?
         // player falls in air
         Gravity();
-        // slow down when not moving
+        // slow down when not moving or dashing
         SlowDown();
-        // boost dodge
-        Dash();
         // align model rotation
-        ModelAlign();
+       // ModelAlign();
     }
 
     // get movement inputs
@@ -164,26 +120,13 @@ public class PlayerController : MonoBehaviour
 
             // clamp velocity within sprint max velocity
             rigidBodyRef.velocity = new Vector3(Mathf.Clamp(rigidBodyRef.velocity.x, -sprintMaxVelocity, sprintMaxVelocity),
-                rigidBodyRef.velocity.y, rigidBodyRef.velocity.z);
-            rigidBodyRef.velocity = new Vector3(rigidBodyRef.velocity.x,
-                Mathf.Clamp(rigidBodyRef.velocity.y, -sprintMaxVelocity, sprintMaxVelocity), rigidBodyRef.velocity.z);
-            rigidBodyRef.velocity = new Vector3(rigidBodyRef.velocity.x, rigidBodyRef.velocity.y,
+                Mathf.Clamp(rigidBodyRef.velocity.y, -sprintMaxVelocity, sprintMaxVelocity),
                 Mathf.Clamp(rigidBodyRef.velocity.z, -sprintMaxVelocity, sprintMaxVelocity));
         }
-        else
+        else 
         {
             // apply force at walk speed
             rigidBodyRef.AddForce(direction * walkSpeed * Time.fixedDeltaTime, ForceMode.Impulse);
-
-            /*
-            // clamp velocity within walk max velocity
-            rigidBodyRef.velocity = new Vector3(Mathf.Clamp(rigidBodyRef.velocity.x, -walkMaxVelocity, walkMaxVelocity),
-                rigidBodyRef.velocity.y, rigidBodyRef.velocity.z);
-            rigidBodyRef.velocity = new Vector3(rigidBodyRef.velocity.x,
-                Mathf.Clamp(rigidBodyRef.velocity.y, -walkMaxVelocity, walkMaxVelocity), rigidBodyRef.velocity.z);
-            rigidBodyRef.velocity = new Vector3(rigidBodyRef.velocity.x, rigidBodyRef.velocity.y,
-                Mathf.Clamp(rigidBodyRef.velocity.z, -walkMaxVelocity, walkMaxVelocity));
-             */
 
             // clamp velocity within walk max velocity
             rigidBodyRef.velocity = new Vector3(Mathf.Clamp(rigidBodyRef.velocity.x, -walkMaxVelocity, walkMaxVelocity),
@@ -197,46 +140,34 @@ public class PlayerController : MonoBehaviour
     {
         // make model look in direction player is heading
         model.forward = new Vector3(direction.x, 0f, direction.z);
-
-        /*
-        // set storage variable to a Quaternion using the cam
-        headRotation = Quaternion.Euler(0f, cam.rotation.eulerAngles.y, 0f);
-        // set head model rotation to headRotation variable
-        head.rotation = headRotation;
-        */
     }
 
     // when player is not moving rapidly slow down (only for x and z movement)
     private void SlowDown()
     {
-        if (!Moving() && rigidBodyRef.velocity != Vector3.zero)
+        if (!Moving() && !dashing && rigidBodyRef.velocity != Vector3.zero)
         {
             // Store the y component to maintain it
             float currentYVelocity = rigidBodyRef.velocity.y;
 
             // Create a new Vector3 with scaled x and z components, and preserve y
-            Vector3 newVelocity = new Vector3(
-                rigidBodyRef.velocity.x / slowSpeed,
-                currentYVelocity,
-                rigidBodyRef.velocity.z / slowSpeed
-            );
+            Vector3 newVelocity = new Vector3(rigidBodyRef.velocity.x / slowSpeed,
+                currentYVelocity, rigidBodyRef.velocity.z / slowSpeed);
 
             // Assign the new velocity to the rigidbody
             rigidBodyRef.velocity = newVelocity;
         }
     }
-   
 
     // get sprint input
-    // when player starts sprinting enter sprinting state
-    // when player stops inputting movements exit sprinting state
-    // return true in springting state and false out of sprinting state
+    // when player starts movign enter moving state
+    // when player stops inputting movements exit moving state
     private bool Moving()
     {
         // get movement input
         Vector2 vectorWASD = playerInputActions.PlayerActions.MoveWASD.ReadValue<Vector2>();
 
-        // if player starts moving enter moving state
+        // if player is entering movement inputs, enter moving state
         if (vectorWASD != Vector2.zero)
         {
             moving = true;
@@ -247,14 +178,13 @@ public class PlayerController : MonoBehaviour
             moving = false;
         }
 
+        // return true in moving state and false out of moving state
         return moving;
     }
 
     // get sprint input
     // when player presses control start sprinting
-    // when player starts sprinting enter sprinting state signified with sprinting bool
     // when player stops inputting movements exit sprinting state
-    // return true in springting state and false out of sprinting state
     private bool Sprinting()
     {
         // get movement input
@@ -267,19 +197,23 @@ public class PlayerController : MonoBehaviour
             rigidBodyRef.AddForce(model.forward * sprintForce, ForceMode.Impulse);
         }
         // if player stops movement stop sprinting
-        if (vectorWASD == Vector2.zero)
+        if (!Moving())
         {
             sprinting = false;
         }
 
+        // return true in sprinting state and false out of sprinting state
         return sprinting;
     }
 
     // check if player is on the ground via raycast
     private void OnGround()
     {
+        // create new raycast
         RaycastHit hit;
 
+        // send raycast down beneath model
+        // if raycast collides with anything mark player as on the ground
         if (Physics.Raycast(transform.position, Vector3.down, out hit, 1.51f))
         {
             onGround = true;
@@ -290,7 +224,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    // if the player is not on the ground or jumping apply force down
+    // if the player is not on the ground apply force down
     private void Gravity()
     {
         if (!onGround)
@@ -309,45 +243,46 @@ public class PlayerController : MonoBehaviour
         {
             rigidBodyRef.AddForce(model.up * jumpForce, ForceMode.Impulse);
         }
-
-        /*
-        // if the player is not on the ground and holds space bar, continuosly provide small lift
-        if (playerInputActions.PlayerActions.Jump.IsPressed())
-        {
-            rigidBodyRef.AddForce(model.up * floatSpeed * Time.fixedDeltaTime, ForceMode.Impulse);
-            floating = true;
-        }
-        else
-        {
-            floating = false;
-        }
-        */
     }
 
-    // get boost inputs
-    // if player presses space apply a force forwards
+    // get dash inputs
+    // if player presses shift apply a force forwards
     private void Dash()
     {
         // if the player is on the ground and presses shift, dash
-        if (playerInputActions.PlayerActions.Dash.WasPerformedThisFrame())
+        if (playerInputActions.PlayerActions.Dash.WasPerformedThisFrame() && !dashCooldown)
         {
+            // set dashing to true
+            dashing = true;
+            // apply force
             rigidBodyRef.AddForce(model.forward * dashForce, ForceMode.Impulse);
+            //begin dash cooldown
+            StartCoroutine(DashTimer());
+            StartCoroutine(DashCooldownTimer());
         }
     }
-
-    // checks if player has fallen off the floor and teleports them back to origin, resetting force
-    //replaced by other code, remove later
-    /*private void Deathfloor()
+     
+    // timer for dash
+    IEnumerator DashTimer()
     {
-        if (transform.position.y <= -15)
-        {
-            // reset position to origin
-            transform.position = Vector3.zero;
-            // reset rotation
-            transform.rotation = Quaternion.Euler(Vector3.zero);
-            // reset momentum
-            rigidBodyRef.velocity = Vector3.zero;
-            print("player died");
-        }
-    }*/
+        Debug.Log("dash has started");
+        // begin dash cooldown
+        dashCooldown = true;
+        // wait 1 second
+        yield return new WaitForSeconds(.5f);
+        // stop dashing
+        dashing = false;
+        Debug.Log("dash has ended");
+    }
+
+    // timer for dash cooldown
+    IEnumerator DashCooldownTimer()
+    {
+        Debug.Log("dash cooldown has started");
+        // wait 5 seconds for dash cooldown
+        yield return new WaitForSeconds(2.5f);
+        // turn off dashCooldown
+        dashCooldown = false;
+        Debug.Log("dash cooldown has ended");
+    }
 }
