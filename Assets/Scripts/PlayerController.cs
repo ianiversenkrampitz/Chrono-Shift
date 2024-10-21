@@ -88,7 +88,7 @@ public class PlayerController : MonoBehaviour
         // slow down when not moving or dashing
         SlowDown();
         // align model rotation
-       // ModelAlign();
+        ModelAlign();
     }
 
     // get movement inputs
@@ -252,24 +252,23 @@ public class PlayerController : MonoBehaviour
         // if the player is on the ground and presses shift, dash
         if (playerInputActions.PlayerActions.Dash.WasPerformedThisFrame() && !dashCooldown)
         {
-            // set dashing to true
-            dashing = true;
             // apply force
             rigidBodyRef.AddForce(model.forward * dashForce, ForceMode.Impulse);
-            //begin dash cooldown
+
+            //begin dash timers
             StartCoroutine(DashTimer());
-            StartCoroutine(DashCooldownTimer());
+            StartCoroutine(DashCooldownTimer());           
         }
     }
-     
+      
     // timer for dash
     IEnumerator DashTimer()
     {
+        // set dashing to true
+        dashing = true;
         Debug.Log("dash has started");
-        // begin dash cooldown
-        dashCooldown = true;
-        // wait 1 second
-        yield return new WaitForSeconds(.5f);
+        // wait .25 second
+        yield return new WaitForSeconds(.25f);
         // stop dashing
         dashing = false;
         Debug.Log("dash has ended");
@@ -278,9 +277,11 @@ public class PlayerController : MonoBehaviour
     // timer for dash cooldown
     IEnumerator DashCooldownTimer()
     {
+        // set dash cooldown to true
+        dashCooldown = true;
         Debug.Log("dash cooldown has started");
-        // wait 5 seconds for dash cooldown
-        yield return new WaitForSeconds(2.5f);
+        // wait .25 seconds for dash, wait 5 seconds for dash cooldown
+        yield return new WaitForSeconds(5.25f);
         // turn off dashCooldown
         dashCooldown = false;
         Debug.Log("dash cooldown has ended");

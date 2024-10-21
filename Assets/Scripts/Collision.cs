@@ -22,6 +22,7 @@ public class Collision : MonoBehaviour
         //creates spawnpoint
     }
 
+    // is called when object passes through a trigger
     public void OnTriggerEnter(Collider other)
     {
         // set respawn point on collision with checkpoint
@@ -44,11 +45,16 @@ public class Collision : MonoBehaviour
             Debug.Log("died from bottomless pit");
             //add stuff to subtract health/lives and reset other variables here
         }
+    }
 
+    // is caled when the object collides into something
+    public void OnCollisionEnter(UnityEngine.Collision other)
+    {
         // if the collided object is a breakable and the player is dashing, set inactive the collided object
         if (other.gameObject.CompareTag("Breakable") && playerController.dashing)
         {
             other.gameObject.SetActive(false);
+            Debug.Log("broke a wall");
         }
     }
 }
