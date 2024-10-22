@@ -6,7 +6,7 @@ using UnityEngine;
 /// <summary>
 /// Monaghan, Devin
 /// Iversen-Krampitz, Ian 
-/// 10/19/2024
+/// 10/21/2024
 /// Handles deathfloor
 /// handles WASD movement
 /// handles jumping
@@ -83,6 +83,7 @@ public class PlayerController : MonoBehaviour
         // jump
         Jump();
                       /// is this necessary?? who knows?
+                      /// i think so, lets keep it in mind tho
         // player falls in air
         Gravity();
         // slow down when not moving or dashing
@@ -229,7 +230,7 @@ public class PlayerController : MonoBehaviour
     {
         if (!onGround)
         {
-            rigidBodyRef.AddForce(Vector3.down * jumpForce * Time.fixedDeltaTime, ForceMode.Impulse);
+            rigidBodyRef.AddForce(Vector3.down * gravitySpeed * Time.fixedDeltaTime, ForceMode.Impulse);
         }
     }
 
