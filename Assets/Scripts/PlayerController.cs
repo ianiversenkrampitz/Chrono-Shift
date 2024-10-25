@@ -1,12 +1,13 @@
+using Cinemachine;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-// using UnityEngine.InputSystem;
+using UnityEngine.InputSystem;
  
 /// <summary>
 /// Monaghan, Devin
 /// Iversen-Krampitz, Ian 
-/// 10/21/2024
+/// 10/24/2024
 /// Handles deathfloor
 /// handles WASD movement
 /// handles jumping
@@ -46,26 +47,35 @@ public class PlayerController : MonoBehaviour
 
     // reference to rigidbody
     public Rigidbody rigidBodyRef;
+    // reference to inputs
+    public PlayerInputActions playerInputActions;
 
     // reference to model
-    [SerializeField] private Transform model;
-    // reference to camera
-    [SerializeField] private Transform cam;
-    // reference to inputs
-    private PlayerInputActions playerInputActions;
+    public Transform model;
 
     // direction holds movement inputs converted into Vector3
     public Vector3 direction;
 
+    // reference to camera
+    [SerializeField] private Transform mainCam;
+
+    // holds movement inputs
+    private Vector2 vectorWASD;
+
     // Awake is called before the first frame update
     void Awake()
     {
+        // hide cursor
+        Cursor.visible = false;
+
         // get rigidbody reference
         rigidBodyRef = this.GetComponent<Rigidbody>();
 
         // enable inputs
         playerInputActions = new PlayerInputActions();
         playerInputActions.Enable();
+
+        print(mainCam.forward);
     }
 
     // handles physics controlled movement
@@ -78,8 +88,6 @@ public class PlayerController : MonoBehaviour
         {
             Move();
         }
-        // dash
-        Dash();
         // jump
         Jump();
                       /// is this necessary?? who knows?
@@ -100,47 +108,60 @@ public class PlayerController : MonoBehaviour
         Vector2 vectorWASD = playerInputActions.PlayerActions.MoveWASD.ReadValue<Vector2>();
 
         // create variables holding camera transform values
-        Vector3 camForward = cam.forward;
-        Vector3 camRight = cam.right;
+        Vector3 forward = mainCam.forward;
+        Vector3 right = mainCam.right;
         // remove y values
-        camForward.y = 0f;
-        camRight.y = 0f;
-        // create variables for direction of model relative to camera
-        Vector3 forwardRelative = vectorWASD.y * camForward;
-        Vector3 rightRelative = vectorWASD.x * camRight;
+        forward.y = 0f;
+        right.y = 0f;
+        // normalize values
+        forward.Normalize();
+        right.Normalize();
         // set direction
-        direction = forwardRelative + rightRelative;
-        direction.y = 0f;
+        direction = (forward * vectorWASD.y + right * vectorWASD.x).normalized;
 
-        // apply force
-        // clamp velocity
-        if (Sprinting())
+        if (Moving())
         {
-            // apply force at sprint speed
-            rigidBodyRef.AddForce(direction * sprintSpeed * Time.fixedDeltaTime, ForceMode.Impulse);
+            // holds clamped Velocity of player
+            Vector3 clampedVelocity;
 
-            // clamp velocity within sprint max velocity
-            rigidBodyRef.velocity = new Vector3(Mathf.Clamp(rigidBodyRef.velocity.x, -sprintMaxVelocity, sprintMaxVelocity),
-                Mathf.Clamp(rigidBodyRef.velocity.y, -sprintMaxVelocity, sprintMaxVelocity),
-                Mathf.Clamp(rigidBodyRef.velocity.z, -sprintMaxVelocity, sprintMaxVelocity));
-        }
-        else 
-        {
-            // apply force at walk speed
-            rigidBodyRef.AddForce(direction * walkSpeed * Time.fixedDeltaTime, ForceMode.Impulse);
+            // apply force
+            // clamp velocity
+            if (Sprinting())
+            {
+                // apply force at sprint speed
+                rigidBodyRef.AddForce(direction * sprintSpeed, ForceMode.Acceleration);
 
-            // clamp velocity within walk max velocity
-            rigidBodyRef.velocity = new Vector3(Mathf.Clamp(rigidBodyRef.velocity.x, -walkMaxVelocity, walkMaxVelocity),
-                Mathf.Clamp(rigidBodyRef.velocity.y, -walkMaxVelocity, walkMaxVelocity), 
-                Mathf.Clamp(rigidBodyRef.velocity.z, -walkMaxVelocity, walkMaxVelocity));
-        }        
+                // clamp velocity within sprint max speed
+                if (rigidBodyRef.velocity.magnitude > sprintMaxVelocity)
+                {
+                    clampedVelocity = rigidBodyRef.velocity.normalized * sprintMaxVelocity;
+                    rigidBodyRef.velocity = new Vector3(clampedVelocity.x, rigidBodyRef.velocity.y, clampedVelocity.z);
+                }
+            }
+            else
+            {
+                // apply force at walk speed
+                rigidBodyRef.AddForce(direction * walkSpeed, ForceMode.Acceleration);
+
+                // clamp velocity within walk max speed
+                if (rigidBodyRef.velocity.magnitude > walkMaxVelocity)
+                {
+                    clampedVelocity = rigidBodyRef.velocity.normalized * walkMaxVelocity;
+                    rigidBodyRef.velocity = new Vector3(clampedVelocity.x, rigidBodyRef.velocity.y, clampedVelocity.z);
+                }
+            }
+        }  
     }
 
     // rotate model with direction it is moving regardless of camera direction
     private void ModelAlign()
     {
-        // make model look in direction player is heading
-        model.forward = new Vector3(direction.x, 0f, direction.z);
+        // make model look in direction player is heading only when moving
+        if (Moving())
+        {
+            Quaternion toRotation = Quaternion.LookRotation(direction, Vector3.up);
+            model.rotation = Quaternion.RotateTowards(model.rotation, toRotation, 720 * Time.deltaTime);
+        }
     }
 
     // when player is not moving rapidly slow down (only for x and z movement)
@@ -155,32 +176,39 @@ public class PlayerController : MonoBehaviour
             Vector3 newVelocity = new Vector3(rigidBodyRef.velocity.x / slowSpeed,
                 currentYVelocity, rigidBodyRef.velocity.z / slowSpeed);
 
+            // if player is moving to slowly stop entirely
+            if (newVelocity.x <= 0.1f && newVelocity.x >= -0.1f)
+            {
+                newVelocity.x = 0f;
+            }
+            if (newVelocity.z <= 0.1f && newVelocity.z >= -0.1f)
+            {
+                newVelocity.z = 0f;
+            }
+
             // Assign the new velocity to the rigidbody
             rigidBodyRef.velocity = newVelocity;
         }
     }
 
     // get sprint input
-    // when player starts movign enter moving state
+    // when player starts moving enter moving state
     // when player stops inputting movements exit moving state
     private bool Moving()
     {
         // get movement input
-        Vector2 vectorWASD = playerInputActions.PlayerActions.MoveWASD.ReadValue<Vector2>();
+        vectorWASD = playerInputActions.PlayerActions.MoveWASD.ReadValue<Vector2>();
 
-        // if player is entering movement inputs, enter moving state
+        // if player is entering movement inputs, return true
         if (vectorWASD != Vector2.zero)
         {
-            moving = true;
+            return true;
         }
-        // if player stops movement exit moving state
+        // if player stops movement return false
         else
         {
-            moving = false;
+            return false;
         }
-
-        // return true in moving state and false out of moving state
-        return moving;
     }
 
     // get sprint input
@@ -244,47 +272,5 @@ public class PlayerController : MonoBehaviour
         {
             rigidBodyRef.AddForce(model.up * jumpForce, ForceMode.Impulse);
         }
-    }
-
-    // get dash inputs
-    // if player presses shift apply a force forwards
-    private void Dash()
-    {
-        // if the player is on the ground and presses shift, dash
-        if (playerInputActions.PlayerActions.Dash.WasPerformedThisFrame() && !dashCooldown)
-        {
-            // apply force
-            rigidBodyRef.AddForce(model.forward * dashForce, ForceMode.Impulse);
-
-            //begin dash timers
-            StartCoroutine(DashTimer());
-            StartCoroutine(DashCooldownTimer());           
-        }
-    }
-      
-    // timer for dash
-    IEnumerator DashTimer()
-    {
-        // set dashing to true
-        dashing = true;
-        Debug.Log("dash has started");
-        // wait .25 second
-        yield return new WaitForSeconds(.25f);
-        // stop dashing
-        dashing = false;
-        Debug.Log("dash has ended");
-    }
-
-    // timer for dash cooldown
-    IEnumerator DashCooldownTimer()
-    {
-        // set dash cooldown to true
-        dashCooldown = true;
-        Debug.Log("dash cooldown has started");
-        // wait .25 seconds for dash, wait 5 seconds for dash cooldown
-        yield return new WaitForSeconds(5.25f);
-        // turn off dashCooldown
-        dashCooldown = false;
-        Debug.Log("dash cooldown has ended");
     }
 }
