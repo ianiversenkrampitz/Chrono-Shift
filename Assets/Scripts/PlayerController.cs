@@ -132,7 +132,7 @@ public class PlayerController : MonoBehaviour
                 rigidBodyRef.AddForce(direction * sprintSpeed, ForceMode.Acceleration);
 
                 // clamp velocity within sprint max speed
-                if (rigidBodyRef.velocity.magnitude > sprintMaxVelocity)
+                if (rigidBodyRef.velocity.magnitude > sprintMaxVelocity && onGround)
                 {
                     clampedVelocity = rigidBodyRef.velocity.normalized * sprintMaxVelocity;
                     rigidBodyRef.velocity = new Vector3(clampedVelocity.x, rigidBodyRef.velocity.y, clampedVelocity.z);
@@ -144,7 +144,7 @@ public class PlayerController : MonoBehaviour
                 rigidBodyRef.AddForce(direction * walkSpeed, ForceMode.Acceleration);
 
                 // clamp velocity within walk max speed
-                if (rigidBodyRef.velocity.magnitude > walkMaxVelocity)
+                if (rigidBodyRef.velocity.magnitude > walkMaxVelocity && onGround)
                 {
                     clampedVelocity = rigidBodyRef.velocity.normalized * walkMaxVelocity;
                     rigidBodyRef.velocity = new Vector3(clampedVelocity.x, rigidBodyRef.velocity.y, clampedVelocity.z);
@@ -216,9 +216,6 @@ public class PlayerController : MonoBehaviour
     // when player stops inputting movements exit sprinting state
     private bool Sprinting()
     {
-        // get movement input
-        Vector2 vectorWASD = playerInputActions.PlayerActions.MoveWASD.ReadValue<Vector2>();
-
         // if player presses ctrl start sprinting
         if (playerInputActions.PlayerActions.Sprint.WasPerformedThisFrame())
         {
@@ -258,7 +255,7 @@ public class PlayerController : MonoBehaviour
     {
         if (!onGround)
         {
-            rigidBodyRef.AddForce(Vector3.down * gravitySpeed * Time.fixedDeltaTime, ForceMode.Impulse);
+            rigidBodyRef.AddForce(Vector3.down * gravitySpeed, ForceMode.Acceleration);
         }
     }
 

@@ -9199,7 +9199,7 @@ PrefabInstance:
     - target: {fileID: 1885331946426977041, guid: 61ddce0dfa87c7749a1c103e7726e5bd,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0
+      value: -1e-45
       objectReference: {fileID: 0}
     - target: {fileID: 1885331946426977041, guid: 61ddce0dfa87c7749a1c103e7726e5bd,
         type: 3}
@@ -38453,7 +38453,7 @@ PrefabInstance:
     - target: {fileID: 3677794198388725386, guid: 1e1ee91bec648714bae534eae87d0f90,
         type: 3}
       propertyPath: jumpForce
-      value: 5
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 3677794198388725386, guid: 1e1ee91bec648714bae534eae87d0f90,
         type: 3}
@@ -38468,7 +38468,12 @@ PrefabInstance:
     - target: {fileID: 3677794198388725386, guid: 1e1ee91bec648714bae534eae87d0f90,
         type: 3}
       propertyPath: sprintSpeed
-      value: 115
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 3677794198388725386, guid: 1e1ee91bec648714bae534eae87d0f90,
+        type: 3}
+      propertyPath: gravitySpeed
+      value: 30
       objectReference: {fileID: 0}
     - target: {fileID: 3677794198388725386, guid: 1e1ee91bec648714bae534eae87d0f90,
         type: 3}
@@ -38484,6 +38489,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalPosition.y
       value: 1.28
+      objectReference: {fileID: 0}
+    - target: {fileID: 7887163104306279294, guid: 1e1ee91bec648714bae534eae87d0f90,
+        type: 3}
+      propertyPath: m_Mass
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
