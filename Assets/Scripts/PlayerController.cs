@@ -79,7 +79,7 @@ public class PlayerController : MonoBehaviour
     }
 
     // handles physics controlled movement
-    private void FixedUpdate()
+    protected virtual void FixedUpdate()
     {
         // check if the player is on the ground or not
         OnGround();

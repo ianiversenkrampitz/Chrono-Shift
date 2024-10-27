@@ -13,6 +13,7 @@ TagManager:
   - Death
   - Checkpoint
   - Breakable
+  - Grapple
   layers:
   - Default
   - TransparentFX
