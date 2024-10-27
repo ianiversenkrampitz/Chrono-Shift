@@ -123,12 +123,6 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
---- !u!4 &58049396 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 7365804151142054834, guid: 1e1ee91bec648714bae534eae87d0f90,
-    type: 3}
-  m_PrefabInstance: {fileID: 1047337191}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &280348312
 GameObject:
   m_ObjectHideFlags: 0
@@ -388,7 +382,7 @@ MonoBehaviour:
   distanceY: -5
   sensitivityX: 10
   sensitivityY: 8
-  player: {fileID: 58049396}
+  player: {fileID: 1547580813}
 --- !u!1 &467379533
 GameObject:
   m_ObjectHideFlags: 0
@@ -967,6 +961,16 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 3677794198388725386, guid: 1e1ee91bec648714bae534eae87d0f90,
+        type: 3}
+      propertyPath: mainCam
+      value: 
+      objectReference: {fileID: 332168458}
+    - target: {fileID: 3677794198388725386, guid: 1e1ee91bec648714bae534eae87d0f90,
+        type: 3}
+      propertyPath: jumpForce
+      value: 4
+      objectReference: {fileID: 0}
     - target: {fileID: 4318054279092342748, guid: 1e1ee91bec648714bae534eae87d0f90,
         type: 3}
       propertyPath: m_Material
@@ -1049,6 +1053,12 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1e1ee91bec648714bae534eae87d0f90, type: 3}
+--- !u!4 &1547580813 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 3151516732391857096, guid: 1e1ee91bec648714bae534eae87d0f90,
+    type: 3}
+  m_PrefabInstance: {fileID: 1047337191}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
