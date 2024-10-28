@@ -1,8 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-/* Iversen-Krampitz, Ian 
- * 10/26/2024
+/* 
+ * Iversen-Krampitz, Ian 
+ * 10/27/2024
  * Controls ice climber mechanics. 
  */
 
@@ -26,7 +27,7 @@ public class IceClimber : PlayerController
         {
             if (playerInputActions.PlayerActions.Swing.IsPressed())
             {
-                Debug.Log("Pressed swing");
+                //Debug.Log("Pressed swing");
                 CastSphere();
             }
         }
@@ -36,25 +37,33 @@ public class IceClimber : PlayerController
     /// </summary>
     private void CastSphere()
     {
-        RaycastHit hit;
-        //casts a sphere around player to detect grapplepoints
-        bool isHit = Physics.SphereCast(transform.position, sphereRadius, transform.forward, out hit, sphereMaxDistance);
-        if (isHit)
+        // Create a sphere around the player’s position with a given radius
+        Collider[] hitColliders = Physics.OverlapSphere(transform.position, sphereRadius);
+
+        bool grapplePointDetected = false;
+
+        // Check each collider within the sphere
+        foreach (Collider hitCollider in hitColliders)
         {
-            if (hit.collider.CompareTag("Grapple"))
+            if (hitCollider.CompareTag("Grapple"))
             {
+                grapplePointDetected = true;
                 Debug.Log("Grapple point detected");
+                // Put code for swinging here
             }
         }
-        else
+
+        if (!grapplePointDetected)
         {
             Debug.Log("No grapple point detected");
         }
     }
+    /// <summary>
+    /// debug for showing sphere
+    /// </summary>
     private void OnDrawGizmos()
     {
-        Gizmos.DrawSphere(transform.position, sphereRadius);
-        Gizmos.DrawWireSphere(transform.position * sphereMaxDistance, sphereRadius);
-        Gizmos.DrawLine(transform.position, transform.position * sphereMaxDistance);
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(transform.position, sphereRadius);
     }
 }
