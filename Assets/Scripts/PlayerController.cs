@@ -5,7 +5,6 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.XR;
 
-
 /// <summary>
 /// Monaghan, Devin
 /// Iversen-Krampitz, Ian 
@@ -21,8 +20,8 @@ public class PlayerController : MonoBehaviour
     // movement speeds
     public float walkSpeed = 50f;
     public float sprintSpeed = 100f;
+    public float glideSpeed = 90f;
     public float slowSpeed = .01f;
-
     // gravity speed
     public float gravitySpeed = 15f;
     public float glideGravity = 5f;
@@ -32,10 +31,11 @@ public class PlayerController : MonoBehaviour
     public float dashForce = 30f;
     // power of sprint boost
     public float sprintForce = 2f;
-    // maximum walk velocity
+    // maximum velocities
     public float walkMaxVelocity = 2f;
-    // maximum sprint velocity
     public float sprintMaxVelocity = 4f;
+    // # of seconds where player cannot input jump after already inputting
+    public float jumpInputDelay = .25f;
 
     // is the player on the ground
     public bool onGround;
@@ -146,6 +146,19 @@ public class PlayerController : MonoBehaviour
                     rigidBodyRef.velocity = new Vector3(clampedVelocity.x, rigidBodyRef.velocity.y, clampedVelocity.z);
                 }
             }
+            else if (gliding)
+            {
+                // apply force at glide speed
+                rigidBodyRef.AddForce(direction * glideSpeed, ForceMode.Acceleration);
+
+                // normalize velocity to preserve direction
+                // set velocity to max walk velocity
+                if (rigidBodyRef.velocity.magnitude > walkMaxVelocity)
+                {
+                    clampedVelocity = rigidBodyRef.velocity.normalized * walkMaxVelocity;
+                    rigidBodyRef.velocity = new Vector3(clampedVelocity.x, rigidBodyRef.velocity.y, clampedVelocity.z);
+                }
+            }
             else
             {
                 // apply force at walk speed
@@ -203,7 +216,7 @@ public class PlayerController : MonoBehaviour
     // get sprint input
     // when player starts moving enter moving state
     // when player stops inputting movements exit moving state
-    private bool Moving()
+    public bool Moving()
     {
         // get movement input
         vectorWASD = playerInputActions.PlayerActions.MoveWASD.ReadValue<Vector2>();
@@ -262,7 +275,7 @@ public class PlayerController : MonoBehaviour
     // if the player is not on the ground apply force down
     private void Gravity()
     {
-        if (!gliding)
+        if (gliding)
         {
             rigidBodyRef.AddForce(Vector3.down * glideGravity, ForceMode.Acceleration);
         }
@@ -291,7 +304,7 @@ public class PlayerController : MonoBehaviour
     public IEnumerator JumpInputCooldown()
     {
         jumpInputCooldown = true;
-        yield return new WaitForSeconds(.5f);
+        yield return new WaitForSeconds(jumpInputDelay);
         jumpInputCooldown = false;
     }
 }
