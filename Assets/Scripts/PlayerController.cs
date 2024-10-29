@@ -5,7 +5,6 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.XR;
 
-
 /// <summary>
 /// Monaghan, Devin
 /// Iversen-Krampitz, Ian 
@@ -21,6 +20,7 @@ public class PlayerController : MonoBehaviour
     // movement speeds
     public float walkSpeed = 50f;
     public float sprintSpeed = 100f;
+    public float glideSpeed = 90f;
     public float slowSpeed = .01f;
 
     // gravity speed
@@ -36,6 +36,8 @@ public class PlayerController : MonoBehaviour
     public float walkMaxVelocity = 2f;
     // maximum sprint velocity
     public float sprintMaxVelocity = 4f;
+    // # of seconds where player cannot input jump after already inputting
+    public float jumpInputDelay = .25f;
 
     // is the player on the ground
     public bool onGround;
@@ -137,6 +139,19 @@ public class PlayerController : MonoBehaviour
             {
                 // apply force at sprint speed
                 rigidBodyRef.AddForce(direction * sprintSpeed, ForceMode.Acceleration);
+
+                // normalize velocity to preserve direction
+                // set velocity to max sprint velocity
+                if (rigidBodyRef.velocity.magnitude > sprintMaxVelocity)
+                {
+                    clampedVelocity = rigidBodyRef.velocity.normalized * sprintMaxVelocity;
+                    rigidBodyRef.velocity = new Vector3(clampedVelocity.x, rigidBodyRef.velocity.y, clampedVelocity.z);
+                }
+            }
+            else if (gliding)
+            {
+                // apply force at glide speed
+                rigidBodyRef.AddForce(direction * glideSpeed, ForceMode.Acceleration);
 
                 // normalize velocity to preserve direction
                 // set velocity to max sprint velocity
@@ -262,7 +277,7 @@ public class PlayerController : MonoBehaviour
     // if the player is not on the ground apply force down
     private void Gravity()
     {
-        if (!gliding)
+        if (gliding)
         {
             rigidBodyRef.AddForce(Vector3.down * glideGravity, ForceMode.Acceleration);
         }
@@ -291,7 +306,7 @@ public class PlayerController : MonoBehaviour
     public IEnumerator JumpInputCooldown()
     {
         jumpInputCooldown = true;
-        yield return new WaitForSeconds(.5f);
+        yield return new WaitForSeconds(jumpInputDelay);
         jumpInputCooldown = false;
     }
 }
