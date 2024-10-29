@@ -9154,17 +9154,17 @@ PrefabInstance:
     - target: {fileID: 425775270323008485, guid: 61ddce0dfa87c7749a1c103e7726e5bd,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0.10698284
+      value: 0.106982835
       objectReference: {fileID: 0}
     - target: {fileID: 425775270323008485, guid: 61ddce0dfa87c7749a1c103e7726e5bd,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: 1.7712595e-15
+      value: -0.00000000740782
       objectReference: {fileID: 0}
     - target: {fileID: 425775270323008485, guid: 61ddce0dfa87c7749a1c103e7726e5bd,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: -1.50531e-16
+      value: 7.970841e-10
       objectReference: {fileID: 0}
     - target: {fileID: 585861746309211436, guid: 61ddce0dfa87c7749a1c103e7726e5bd,
         type: 3}
@@ -28420,6 +28420,48 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1568434443}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &1579268549 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3662214874744199615, guid: 1e1ee91bec648714bae534eae87d0f90,
+    type: 3}
+  m_PrefabInstance: {fileID: 8666593809902939439}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1579268551 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3677794198388725386, guid: 1e1ee91bec648714bae534eae87d0f90,
+    type: 3}
+  m_PrefabInstance: {fileID: 8666593809902939439}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1579268549}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4119f6fa9e724f242aff38fabf10d0eb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1579268560
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1579268549}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1fdfb976b7b94dd4d97fb9864e491032, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ninjaWalkSpeed: 100
+  ninjaSprintSpeed: 100
+  ninjaGlideSpeed: 85
+  ninjaSlowSpeed: 1.25
+  ninjaGravitySpeed: 35
+  ninjaGlideGravity: 5
+  ninjaJumpForce: 15
+  ninjaDashForce: 50
+  ninjaSprintForce: 3
+  ninjaWalkMaxVelocity: 17
+  ninjaSprintMaxVelocity: 27
+  controller: {fileID: 1579268551}
 --- !u!1 &1580187952
 GameObject:
   m_ObjectHideFlags: 0
@@ -38519,10 +38561,19 @@ PrefabInstance:
       propertyPath: glideSpeed
       value: 85
       objectReference: {fileID: 0}
+    - target: {fileID: 3677794198388725386, guid: 1e1ee91bec648714bae534eae87d0f90,
+        type: 3}
+      propertyPath: sprintMaxVelocity
+      value: 25
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 3662214874744199615, guid: 1e1ee91bec648714bae534eae87d0f90,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1579268560}
   m_SourcePrefab: {fileID: 100100000, guid: 1e1ee91bec648714bae534eae87d0f90, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
@@ -38536,6 +38587,6 @@ SceneRoots:
   - {fileID: 1780591835}
   - {fileID: 487503281}
   - {fileID: 821720586}
-  - {fileID: 8666593809902939439}
   - {fileID: 544201492}
   - {fileID: 1629733182}
+  - {fileID: 8666593809902939439}

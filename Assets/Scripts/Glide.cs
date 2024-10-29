@@ -29,6 +29,10 @@ public class Glide : MonoBehaviour
             // start jump input cooldown
             StartCoroutine(controller.JumpInputCooldown());
         }
+        else if (!controller.Moving())
+        {
+            controller.gliding = false;
+        }
         else if (controller.onGround)
         {
             controller.gliding = false;

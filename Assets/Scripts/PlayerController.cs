@@ -22,7 +22,6 @@ public class PlayerController : MonoBehaviour
     public float sprintSpeed = 100f;
     public float glideSpeed = 90f;
     public float slowSpeed = .01f;
-
     // gravity speed
     public float gravitySpeed = 15f;
     public float glideGravity = 5f;
@@ -32,9 +31,8 @@ public class PlayerController : MonoBehaviour
     public float dashForce = 30f;
     // power of sprint boost
     public float sprintForce = 2f;
-    // maximum walk velocity
+    // maximum velocities
     public float walkMaxVelocity = 2f;
-    // maximum sprint velocity
     public float sprintMaxVelocity = 4f;
     // # of seconds where player cannot input jump after already inputting
     public float jumpInputDelay = .25f;
@@ -154,10 +152,10 @@ public class PlayerController : MonoBehaviour
                 rigidBodyRef.AddForce(direction * glideSpeed, ForceMode.Acceleration);
 
                 // normalize velocity to preserve direction
-                // set velocity to max sprint velocity
-                if (rigidBodyRef.velocity.magnitude > sprintMaxVelocity)
+                // set velocity to max walk velocity
+                if (rigidBodyRef.velocity.magnitude > walkMaxVelocity)
                 {
-                    clampedVelocity = rigidBodyRef.velocity.normalized * sprintMaxVelocity;
+                    clampedVelocity = rigidBodyRef.velocity.normalized * walkMaxVelocity;
                     rigidBodyRef.velocity = new Vector3(clampedVelocity.x, rigidBodyRef.velocity.y, clampedVelocity.z);
                 }
             }
@@ -218,7 +216,7 @@ public class PlayerController : MonoBehaviour
     // get sprint input
     // when player starts moving enter moving state
     // when player stops inputting movements exit moving state
-    private bool Moving()
+    public bool Moving()
     {
         // get movement input
         vectorWASD = playerInputActions.PlayerActions.MoveWASD.ReadValue<Vector2>();
