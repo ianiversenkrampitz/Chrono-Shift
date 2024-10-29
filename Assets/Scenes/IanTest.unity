@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028352, g: 0.22571376, b: 0.30692244, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -222,7 +222,7 @@ Transform:
   m_GameObject: {fileID: 23900487}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 19.819332, y: -14.33, z: -7.387372}
+  m_LocalPosition: {x: 19.819332, y: -18.11, z: -7.387372}
   m_LocalScale: {x: 3.0683, y: 3.0683, z: 3.0683}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1136,8 +1136,24 @@ PrefabInstance:
       propertyPath: jumpForce
       value: 5
       objectReference: {fileID: 0}
+    - target: {fileID: 4873773055175640053, guid: 1e1ee91bec648714bae534eae87d0f90,
+        type: 3}
+      propertyPath: controller
+      value: 
+      objectReference: {fileID: 2130638817}
+    - target: {fileID: 5682627821108297908, guid: 1e1ee91bec648714bae534eae87d0f90,
+        type: 3}
+      propertyPath: controller
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 6438151201977756615, guid: 1e1ee91bec648714bae534eae87d0f90,
+        type: 3}
+      propertyPath: controller
+      value: 
+      objectReference: {fileID: 2130638817}
     m_RemovedComponents:
     - {fileID: 3677794198388725386, guid: 1e1ee91bec648714bae534eae87d0f90, type: 3}
+    - {fileID: 5682627821108297908, guid: 1e1ee91bec648714bae534eae87d0f90, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:
@@ -1170,25 +1186,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 62eba0d4a05fa454bb53589568dc4c2a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  walkSpeed: 30
-  sprintSpeed: 40
-  slowSpeed: 20
-  gravitySpeed: 10
-  jumpForce: 10
-  dashForce: 10
-  sprintForce: 10
-  walkMaxVelocity: 10
-  sprintMaxVelocity: 10
+  walkSpeed: 75
+  sprintSpeed: 100
+  slowSpeed: 1.25
+  gravitySpeed: 35
+  glideGravity: 20
+  jumpForce: 18
+  dashForce: 40
+  sprintForce: 3
+  walkMaxVelocity: 15
+  sprintMaxVelocity: 30
   onGround: 0
   moving: 0
   dashing: 0
   dashCooldown: 0
+  gliding: 0
+  jumpInputCooldown: 0
   rigidBodyRef: {fileID: 2130638821}
   model: {fileID: 1676975280}
   direction: {x: 0, y: 0, z: 0}
   mainCam: {fileID: 332168458}
   sphereRadius: 4
   sphereMaxDistance: 5
+  pointDistance: {x: 0, y: 0, z: 0}
+  pointPosition: {x: 0, y: 0, z: 0}
+  lineMat: {fileID: 0}
+  lengthOfLineRenderer: 20
+  isGrappling: 0
 --- !u!54 &2130638821 stripped
 Rigidbody:
   m_CorrespondingSourceObject: {fileID: 7887163104306279294, guid: 1e1ee91bec648714bae534eae87d0f90,
