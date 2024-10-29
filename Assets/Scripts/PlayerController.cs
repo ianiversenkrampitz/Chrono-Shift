@@ -3,12 +3,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
- 
+using UnityEngine.InputSystem.XR;
+
 /// <summary>
 /// Monaghan, Devin
 /// Iversen-Krampitz, Ian 
-/// 10/24/2024
-/// Handles deathfloor
+/// 10/29/2024
+/// handles deathfloor
 /// handles WASD movement
 /// handles jumping
 /// handles dash
@@ -19,10 +20,12 @@ public class PlayerController : MonoBehaviour
     // movement speeds
     public float walkSpeed = 50f;
     public float sprintSpeed = 100f;
+    public float glideSpeed = 90f;
     public float slowSpeed = .01f;
 
     // gravity speed
     public float gravitySpeed = 15f;
+    public float glideGravity = 5f;
     // power of jump
     public float jumpForce = 20f;
     // power of dash
@@ -33,6 +36,8 @@ public class PlayerController : MonoBehaviour
     public float walkMaxVelocity = 2f;
     // maximum sprint velocity
     public float sprintMaxVelocity = 4f;
+    // # of seconds where player cannot input jump after already inputting
+    public float jumpInputDelay = .25f;
 
     // is the player on the ground
     public bool onGround;
@@ -44,6 +49,10 @@ public class PlayerController : MonoBehaviour
     public bool dashing = false;
     // is the dash on cooldown
     public bool dashCooldown = false;
+    // is the player currently gliding
+    public bool gliding;
+    // did the player just press jump
+    public bool jumpInputCooldown;
 
     // reference to rigidbody
     public Rigidbody rigidBodyRef;
@@ -83,6 +92,8 @@ public class PlayerController : MonoBehaviour
     {
         // check if the player is on the ground or not
         OnGround();
+        // check for if player is trying to sprint
+        Sprinting();
         // move when not dashing
         if (!dashing)
         {
@@ -90,8 +101,6 @@ public class PlayerController : MonoBehaviour
         }
         // jump
         Jump();
-                      /// is this necessary?? who knows?
-                      /// i think so, lets keep it in mind tho
         // player falls in air
         Gravity();
         // slow down when not moving or dashing
@@ -126,13 +135,27 @@ public class PlayerController : MonoBehaviour
 
             // apply force
             // clamp velocity
-            if (Sprinting())
+            if (sprinting)
             {
                 // apply force at sprint speed
                 rigidBodyRef.AddForce(direction * sprintSpeed, ForceMode.Acceleration);
 
-                // clamp velocity within sprint max speed
-                if (rigidBodyRef.velocity.magnitude > sprintMaxVelocity && onGround)
+                // normalize velocity to preserve direction
+                // set velocity to max sprint velocity
+                if (rigidBodyRef.velocity.magnitude > sprintMaxVelocity)
+                {
+                    clampedVelocity = rigidBodyRef.velocity.normalized * sprintMaxVelocity;
+                    rigidBodyRef.velocity = new Vector3(clampedVelocity.x, rigidBodyRef.velocity.y, clampedVelocity.z);
+                }
+            }
+            else if (gliding)
+            {
+                // apply force at glide speed
+                rigidBodyRef.AddForce(direction * glideSpeed, ForceMode.Acceleration);
+
+                // normalize velocity to preserve direction
+                // set velocity to max sprint velocity
+                if (rigidBodyRef.velocity.magnitude > sprintMaxVelocity)
                 {
                     clampedVelocity = rigidBodyRef.velocity.normalized * sprintMaxVelocity;
                     rigidBodyRef.velocity = new Vector3(clampedVelocity.x, rigidBodyRef.velocity.y, clampedVelocity.z);
@@ -143,14 +166,15 @@ public class PlayerController : MonoBehaviour
                 // apply force at walk speed
                 rigidBodyRef.AddForce(direction * walkSpeed, ForceMode.Acceleration);
 
-                // clamp velocity within walk max speed
-                if (rigidBodyRef.velocity.magnitude > walkMaxVelocity && onGround)
+                // normalize velocity to preserve direction
+                // set velocity to max walk velocity
+                if (rigidBodyRef.velocity.magnitude > walkMaxVelocity)
                 {
                     clampedVelocity = rigidBodyRef.velocity.normalized * walkMaxVelocity;
                     rigidBodyRef.velocity = new Vector3(clampedVelocity.x, rigidBodyRef.velocity.y, clampedVelocity.z);
                 }
             }
-        }  
+        }
     }
 
     // rotate model with direction it is moving regardless of camera direction
@@ -253,7 +277,11 @@ public class PlayerController : MonoBehaviour
     // if the player is not on the ground apply force down
     private void Gravity()
     {
-        if (!onGround)
+        if (gliding)
+        {
+            rigidBodyRef.AddForce(Vector3.down * glideGravity, ForceMode.Acceleration);
+        }
+        else if (!onGround)
         {
             rigidBodyRef.AddForce(Vector3.down * gravitySpeed, ForceMode.Acceleration);
         }
@@ -265,9 +293,20 @@ public class PlayerController : MonoBehaviour
     private void Jump()
     {
         // if the player is on the ground and presses the spacebar, jump
-        if (onGround && playerInputActions.PlayerActions.Jump.IsPressed())
+        if (onGround && playerInputActions.PlayerActions.Jump.IsPressed() && !jumpInputCooldown)
         {
             rigidBodyRef.AddForce(model.up * jumpForce, ForceMode.Impulse);
+
+            // start jump input cooldown
+            StartCoroutine(JumpInputCooldown());
         }
+    }
+
+    // dissallow player from inputting jump again for .5 seconds to prevent duplicate inputs on a single key press
+    public IEnumerator JumpInputCooldown()
+    {
+        jumpInputCooldown = true;
+        yield return new WaitForSeconds(jumpInputDelay);
+        jumpInputCooldown = false;
     }
 }
