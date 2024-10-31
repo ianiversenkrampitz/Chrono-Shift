@@ -37,12 +37,14 @@ public class IceClimber : PlayerController
         }
         lineRenderer.material = lineMat;
         lineRenderer.widthMultiplier = .2f;
+        //sets up spring joints 
         joint = gameObject.AddComponent<SpringJoint>();
         joint = GetComponent<SpringJoint>();      
     }
-
+    
     protected override void FixedUpdate()
     {
+        //uses playercontroller's update 
         base.FixedUpdate();
         distanceFromPoint = (pointPosition - transform.position).magnitude;
         pointDirection = (pointPosition - transform.position);
@@ -58,6 +60,7 @@ public class IceClimber : PlayerController
         }
         if (isGrappling)
         {
+            //draws line 
             lineRenderer.SetPosition(0, transform.position);
             lineRenderer.SetPosition(1, pointPosition);
             //sets anchor point to point position
@@ -70,6 +73,7 @@ public class IceClimber : PlayerController
         }
         else
         {
+            //disables line 
             lineRenderer.SetPosition(0, transform.position);
             lineRenderer.SetPosition(1, transform.position);
             //sets springiness and damper to null to turn it off
