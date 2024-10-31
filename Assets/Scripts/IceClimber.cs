@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 /* 
- * Iversen-Krampitz, Ian 
- * 10/27/2024
+ * Iversen-Krampitz, Ian
+ * Monaghan, Devin
+ * 10/30/2024
  * Controls ice climber mechanics. 
  */
 
-public class IceClimber : PlayerController
+public class IceClimber : MonoBehaviour
 {
     public float sphereRadius;
     public float sphereMaxDistance;
@@ -23,6 +24,8 @@ public class IceClimber : PlayerController
     public bool isGrappling;
     public LineRenderer lineRenderer;
     public SpringJoint joint;
+
+    public PlayerController controller;
 
     // Start is called before the first frame update
     void Start()
@@ -42,16 +45,14 @@ public class IceClimber : PlayerController
         joint = GetComponent<SpringJoint>();      
     }
     
-    protected override void FixedUpdate()
+    public void FixedUpdate()
     {
-        //uses playercontroller's update 
-        base.FixedUpdate();
         distanceFromPoint = (pointPosition - transform.position).magnitude;
         pointDirection = (pointPosition - transform.position);
         //can only be used in midair 
-        if (!onGround)
+        if (!controller.onGround)
         {
-            if (playerInputActions.PlayerActions.Swing.IsPressed())
+            if (controller.playerInputActions.PlayerActions.Swing.IsPressed())
             {
                 //Debug.Log("Pressed swing");
                 Grapple();
@@ -119,14 +120,14 @@ public class IceClimber : PlayerController
         //multiplied by distance from center point 
         Debug.Log("normal pushback");
         float pushForce = Mathf.Clamp(distanceFromPoint, 0f, maxPushForce);
-        rigidBodyRef.AddForce(-direction * pushForce, ForceMode.Impulse);
+        controller.rigidBodyRef.AddForce(-controller.direction * pushForce, ForceMode.Impulse);
 
         //if not holding a direction, apply force towards center of point 
        
-        if (!playerInputActions.PlayerActions.MoveWASD.IsPressed() && (distanceFromPoint > ropeLength))
+        if (!controller.playerInputActions.PlayerActions.MoveWASD.IsPressed() && (distanceFromPoint > ropeLength))
         {
             Debug.Log("Pushing back" + pointDirection);
-            rigidBodyRef.AddForce(pointDirection * pushForce, ForceMode.Impulse);
+            controller.rigidBodyRef.AddForce(pointDirection * pushForce, ForceMode.Impulse);
         }
     }
     /// <summary>
@@ -145,7 +146,7 @@ public class IceClimber : PlayerController
     public IEnumerator Grappling()
     {
         //swing if pressed 
-        while (playerInputActions.PlayerActions.Swing.IsPressed())
+        while (controller.playerInputActions.PlayerActions.Swing.IsPressed())
         {
             isGrappling = true;
             //swing towards center of object with fixed momentum 

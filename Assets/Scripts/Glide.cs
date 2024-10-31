@@ -21,7 +21,8 @@ public class Glide : MonoBehaviour
 
     public void Gliding()
     {
-        if (!controller.onGround && controller.playerInputActions.PlayerActions.Jump.IsPressed() && !controller.jumpInputCooldown)
+        if (controller.playerInputActions.PlayerActions.Jump.WasPerformedThisFrame()
+            && !controller.jumpInputCooldown && !controller.onGround)
         {
             controller.gliding = true;
             print("player is gliding");

@@ -133,7 +133,7 @@ public class PlayerController : MonoBehaviour
 
             // apply force
             // clamp velocity
-            if (sprinting)
+            if (sprinting || gliding)
             {
                 // apply force at sprint speed
                 rigidBodyRef.AddForce(direction * sprintSpeed, ForceMode.Acceleration);
@@ -143,19 +143,6 @@ public class PlayerController : MonoBehaviour
                 if (rigidBodyRef.velocity.magnitude > sprintMaxVelocity)
                 {
                     clampedVelocity = rigidBodyRef.velocity.normalized * sprintMaxVelocity;
-                    rigidBodyRef.velocity = new Vector3(clampedVelocity.x, rigidBodyRef.velocity.y, clampedVelocity.z);
-                }
-            }
-            else if (gliding)
-            {
-                // apply force at glide speed
-                rigidBodyRef.AddForce(direction * glideSpeed, ForceMode.Acceleration);
-
-                // normalize velocity to preserve direction
-                // set velocity to max walk velocity
-                if (rigidBodyRef.velocity.magnitude > walkMaxVelocity)
-                {
-                    clampedVelocity = rigidBodyRef.velocity.normalized * walkMaxVelocity;
                     rigidBodyRef.velocity = new Vector3(clampedVelocity.x, rigidBodyRef.velocity.y, clampedVelocity.z);
                 }
             }
