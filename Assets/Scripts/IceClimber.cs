@@ -16,7 +16,9 @@ public class IceClimber : PlayerController
     public float distanceFromPoint;
     public float springiness;
     public float dampening;
+    public float maxPushForce;
     public Vector3 pointPosition;
+    public Vector3 pointDirection;
     public Material lineMat;
     public bool isGrappling;
     public LineRenderer lineRenderer;
@@ -43,6 +45,7 @@ public class IceClimber : PlayerController
     {
         base.FixedUpdate();
         distanceFromPoint = (pointPosition - transform.position).magnitude;
+        pointDirection = (pointPosition - transform.position);
         //can only be used in midair 
         if (!onGround)
         {
@@ -50,6 +53,7 @@ public class IceClimber : PlayerController
             {
                 //Debug.Log("Pressed swing");
                 Grapple();
+                Pushback();
             }
         }
         if (isGrappling)
@@ -66,7 +70,6 @@ public class IceClimber : PlayerController
         }
         else
         {
-            Debug.Log("no longer grappling");
             lineRenderer.SetPosition(0, transform.position);
             lineRenderer.SetPosition(1, transform.position);
             //sets springiness and damper to null to turn it off
@@ -110,7 +113,17 @@ public class IceClimber : PlayerController
     {
         //pushes the character in the opposite direction of movement,
         //multiplied by distance from center point 
-        //rigidBodyRef.AddForce(((pointPosition - transform.position).magnitude)-(ropeLength))*(direction * walkSpeed), ForceMode.Acceleration);
+        Debug.Log("normal pushback");
+        float pushForce = Mathf.Clamp(distanceFromPoint, 0f, maxPushForce);
+        rigidBodyRef.AddForce(-direction * pushForce, ForceMode.Impulse);
+
+        //if not holding a direction, apply force towards center of point 
+       
+        if (!playerInputActions.PlayerActions.MoveWASD.IsPressed() && (distanceFromPoint > ropeLength))
+        {
+            Debug.Log("Pushing back" + pointDirection);
+            rigidBodyRef.AddForce(pointDirection * pushForce, ForceMode.Impulse);
+        }
     }
     /// <summary>
     /// debug for showing sphere
@@ -133,7 +146,7 @@ public class IceClimber : PlayerController
             isGrappling = true;
             //swing towards center of object with fixed momentum 
             //check if the player's distance is farther than rope length
-            if (ropeLength > distanceFromPoint)
+            if (ropeLength > sphereMaxDistance)
             {
                 isGrappling = false;
                 Debug.Log("distance is " + ropeLength);
@@ -144,7 +157,8 @@ public class IceClimber : PlayerController
                 yield return null;
             }
         }
-        Debug.Log("broke");
+
+        Debug.Log("no longer grappling");
         isGrappling = false;
     }
 }
