@@ -670,7 +670,7 @@ Transform:
   m_GameObject: {fileID: 467379533}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.33, y: -25.64, z: -0.5219059}
+  m_LocalPosition: {x: 25.7, y: -38.8, z: -27}
   m_LocalScale: {x: 16.458, y: 1, z: 18.145}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -732,7 +732,7 @@ PrefabInstance:
     - target: {fileID: 1885331946426977041, guid: 61ddce0dfa87c7749a1c103e7726e5bd,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0.050048
+      value: 0.050048005
       objectReference: {fileID: 0}
     - target: {fileID: 1885331946426977041, guid: 61ddce0dfa87c7749a1c103e7726e5bd,
         type: 3}
@@ -1638,12 +1638,15 @@ MonoBehaviour:
   model: {fileID: 1676975280}
   direction: {x: 0, y: 0, z: 0}
   mainCam: {fileID: 1578511066}
-  sphereRadius: 4
-  sphereMaxDistance: 5
+  sphereRadius: 10
+  sphereMaxDistance: 12
   ropeLength: 0
+  distanceFromPoint: 0
   springiness: 10
   dampening: 5
+  maxPushForce: 0.5
   pointPosition: {x: 0, y: 0, z: 0}
+  pointDirection: {x: 0, y: 0, z: 0}
   lineMat: {fileID: 2100000, guid: 7e3c00fc067860e449c5aeea634483a6, type: 2}
   isGrappling: 0
   lineRenderer: {fileID: 0}
