@@ -1,6 +1,7 @@
 using Cinemachine;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.XR;
@@ -8,7 +9,7 @@ using UnityEngine.InputSystem.XR;
 /// <summary>
 /// Monaghan, Devin
 /// Iversen-Krampitz, Ian 
-/// 10/29/2024
+/// 11/2/2024
 /// handles deathfloor
 /// handles WASD movement
 /// handles jumping
@@ -34,13 +35,16 @@ public class PlayerController : MonoBehaviour
     // maximum velocities
     public float walkMaxVelocity = 2f;
     public float sprintMaxVelocity = 4f;
+    public float gravityMaxVelocity = 30f;
     // # of seconds where player cannot input jump after already inputting
     public float jumpInputDelay = .25f;
+    // # of seconds of dash cooldown
+    public float dashCoolTime = 2f;
 
     // is the player on the ground
     public bool onGround;
     // is the player sprinting or walking
-    private bool sprinting = false;
+    public bool sprinting = false;
     // is the player actively moving;
     public bool moving = false;
     // is the player actively dashing
@@ -133,7 +137,7 @@ public class PlayerController : MonoBehaviour
 
             // apply force
             // clamp velocity
-            if (sprinting || gliding)
+            if (sprinting)
             {
                 // apply force at sprint speed
                 rigidBodyRef.AddForce(direction * sprintSpeed, ForceMode.Acceleration);
@@ -262,13 +266,25 @@ public class PlayerController : MonoBehaviour
     // if the player is not on the ground apply force down
     private void Gravity()
     {
+        // if gliding apply reduced gravity
         if (gliding)
         {
-            rigidBodyRef.AddForce(Vector3.down * glideGravity, ForceMode.Acceleration);
+            Vector3 gravityDirection = transform.position;
+            gravityDirection.y -= glideGravity * Time.deltaTime;
+            transform.position = gravityDirection;
         }
+        // apply gravity when not on ground
         else if (!onGround)
         {
             rigidBodyRef.AddForce(Vector3.down * gravitySpeed, ForceMode.Acceleration);
+        }
+        
+        // clamp gravity speed
+        Vector3 clampedVelocity;
+        if (rigidBodyRef.velocity.magnitude > gravityMaxVelocity)
+        {
+            clampedVelocity = rigidBodyRef.velocity.normalized * gravityMaxVelocity;
+            rigidBodyRef.velocity = new Vector3(rigidBodyRef.velocity.x, clampedVelocity.y, rigidBodyRef.velocity.z);
         }
     }
 

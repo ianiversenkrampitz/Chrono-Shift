@@ -42,6 +42,15 @@
                     "initialStateCheck": false
                 },
                 {
+                    "name": "Glide",
+                    "type": "Button",
+                    "id": "c1abb6f1-82e2-4c55-b81d-f818d1a23469",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
                     "name": "Mouse",
                     "type": "Value",
                     "id": "ab92c89a-af4b-466d-b34e-09a4809eda0f",
@@ -119,7 +128,7 @@
                 {
                     "name": "",
                     "id": "415034c8-6256-4797-9b6b-1ac2c2d93cce",
-                    "path": "<Keyboard>/leftShift",
+                    "path": "<Keyboard>/q",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -130,7 +139,7 @@
                 {
                     "name": "",
                     "id": "85694012-1049-467a-8521-948104f1a56e",
-                    "path": "<Keyboard>/ctrl",
+                    "path": "<Keyboard>/shift",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -168,6 +177,17 @@
                     "processors": "",
                     "groups": "",
                     "action": "Swing",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "ac48eb1f-32e0-44d6-ad41-96029b57dc17",
+                    "path": "<Keyboard>/e",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Glide",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

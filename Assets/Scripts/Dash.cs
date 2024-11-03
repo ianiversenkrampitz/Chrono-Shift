@@ -5,12 +5,12 @@ using UnityEngine.UIElements.Experimental;
 
 /// <summary>
 /// Monaghan, Devin
-/// 10/25/2024
+/// 11/2/2024
 /// handles dash
 /// </summary>
 
 public class Dash : MonoBehaviour
-{
+{    
     [SerializeField] private PlayerController controller;
 
     // handles physics controlled movement
@@ -55,7 +55,7 @@ public class Dash : MonoBehaviour
         controller.dashCooldown = true;
         Debug.Log("dash cooldown has started");
         // wait .25 seconds for dash, wait 5 seconds for dash cooldown
-        yield return new WaitForSeconds(5.25f);
+        yield return new WaitForSeconds(controller.dashCoolTime);
         // turn off dashCooldown
         controller.dashCooldown = false;
         Debug.Log("dash cooldown has ended");

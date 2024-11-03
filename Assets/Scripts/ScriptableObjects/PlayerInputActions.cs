@@ -64,6 +64,15 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
+                    ""name"": ""Glide"",
+                    ""type"": ""Button"",
+                    ""id"": ""c1abb6f1-82e2-4c55-b81d-f818d1a23469"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
                     ""name"": ""Mouse"",
                     ""type"": ""Value"",
                     ""id"": ""ab92c89a-af4b-466d-b34e-09a4809eda0f"",
@@ -141,7 +150,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""415034c8-6256-4797-9b6b-1ac2c2d93cce"",
-                    ""path"": ""<Keyboard>/leftShift"",
+                    ""path"": ""<Keyboard>/q"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -152,7 +161,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""85694012-1049-467a-8521-948104f1a56e"",
-                    ""path"": ""<Keyboard>/ctrl"",
+                    ""path"": ""<Keyboard>/shift"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -190,6 +199,17 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""Swing"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""ac48eb1f-32e0-44d6-ad41-96029b57dc17"",
+                    ""path"": ""<Keyboard>/e"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Glide"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -265,6 +285,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         m_PlayerActions_Dash = m_PlayerActions.FindAction("Dash", throwIfNotFound: true);
         m_PlayerActions_Sprint = m_PlayerActions.FindAction("Sprint", throwIfNotFound: true);
         m_PlayerActions_Jump = m_PlayerActions.FindAction("Jump", throwIfNotFound: true);
+        m_PlayerActions_Glide = m_PlayerActions.FindAction("Glide", throwIfNotFound: true);
         m_PlayerActions_Mouse = m_PlayerActions.FindAction("Mouse", throwIfNotFound: true);
         m_PlayerActions_Swing = m_PlayerActions.FindAction("Swing", throwIfNotFound: true);
     }
@@ -332,6 +353,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
     private readonly InputAction m_PlayerActions_Dash;
     private readonly InputAction m_PlayerActions_Sprint;
     private readonly InputAction m_PlayerActions_Jump;
+    private readonly InputAction m_PlayerActions_Glide;
     private readonly InputAction m_PlayerActions_Mouse;
     private readonly InputAction m_PlayerActions_Swing;
     public struct PlayerActionsActions
@@ -342,6 +364,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         public InputAction @Dash => m_Wrapper.m_PlayerActions_Dash;
         public InputAction @Sprint => m_Wrapper.m_PlayerActions_Sprint;
         public InputAction @Jump => m_Wrapper.m_PlayerActions_Jump;
+        public InputAction @Glide => m_Wrapper.m_PlayerActions_Glide;
         public InputAction @Mouse => m_Wrapper.m_PlayerActions_Mouse;
         public InputAction @Swing => m_Wrapper.m_PlayerActions_Swing;
         public InputActionMap Get() { return m_Wrapper.m_PlayerActions; }
@@ -365,6 +388,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @Jump.started += instance.OnJump;
             @Jump.performed += instance.OnJump;
             @Jump.canceled += instance.OnJump;
+            @Glide.started += instance.OnGlide;
+            @Glide.performed += instance.OnGlide;
+            @Glide.canceled += instance.OnGlide;
             @Mouse.started += instance.OnMouse;
             @Mouse.performed += instance.OnMouse;
             @Mouse.canceled += instance.OnMouse;
@@ -387,6 +413,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @Jump.started -= instance.OnJump;
             @Jump.performed -= instance.OnJump;
             @Jump.canceled -= instance.OnJump;
+            @Glide.started -= instance.OnGlide;
+            @Glide.performed -= instance.OnGlide;
+            @Glide.canceled -= instance.OnGlide;
             @Mouse.started -= instance.OnMouse;
             @Mouse.performed -= instance.OnMouse;
             @Mouse.canceled -= instance.OnMouse;
@@ -461,6 +490,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         void OnDash(InputAction.CallbackContext context);
         void OnSprint(InputAction.CallbackContext context);
         void OnJump(InputAction.CallbackContext context);
+        void OnGlide(InputAction.CallbackContext context);
         void OnMouse(InputAction.CallbackContext context);
         void OnSwing(InputAction.CallbackContext context);
     }
