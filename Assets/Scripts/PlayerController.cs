@@ -64,6 +64,15 @@ public class PlayerController : MonoBehaviour
     // reference to model
     public Transform model;
 
+    // reference to capsule
+    public GameObject capsule;
+
+    // references to different color materials
+    public Material red;
+    public Material green;
+    public Material blue;
+    public Material silver;
+
     // direction holds movement inputs converted into Vector3
     public Vector3 direction;
 
@@ -109,6 +118,8 @@ public class PlayerController : MonoBehaviour
         SlowDown();
         // align model rotation
         ModelAlign();
+        // change color to provide feedback
+        ColorChange();
     }
 
     // get movement inputs
@@ -309,5 +320,27 @@ public class PlayerController : MonoBehaviour
         jumpInputCooldown = true;
         yield return new WaitForSeconds(jumpInputDelay);
         jumpInputCooldown = false;
+    }
+
+    private void ColorChange()
+    {
+        if (dashCooldown)
+        {
+            capsule.GetComponent<Renderer>().material = red;
+            return;
+        }
+        else if (gliding)
+        {
+            capsule.GetComponent<Renderer>().material = blue;
+            return;
+        }
+        else if (sprinting)
+        {
+            capsule.GetComponent<Renderer>().material = green;
+        }
+        else
+        {
+            capsule.GetComponent<Renderer>().material = silver;
+        }
     }
 }

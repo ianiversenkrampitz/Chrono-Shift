@@ -8,7 +8,7 @@ using UnityEngine;
 /// holds ninja variables
 /// </summary>
 
-public class Ninja : MonoBehaviour
+public class NinjaStats : MonoBehaviour
 {
     // movement speeds
     public float ninjaWalkSpeed = 100f;

@@ -8,7 +8,7 @@ using UnityEngine;
 /// holds vampire variables
 /// </summary>
 
-public class Vampire : MonoBehaviour
+public class VampireStats : MonoBehaviour
 {
     // movement speeds
     public float vampireWalkSpeed = 750f;

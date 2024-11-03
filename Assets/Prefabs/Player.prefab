@@ -184,8 +184,8 @@ MonoBehaviour:
   sprintSpeed: 100
   glideSpeed: 90
   slowSpeed: 1.25
-  gravitySpeed: 30
-  glideGravity: 10
+  gravitySpeed: 40
+  glideGravity: 5
   jumpForce: 20
   dashForce: 30
   sprintForce: 2
@@ -194,7 +194,8 @@ MonoBehaviour:
   gravityMaxVelocity: 50
   jumpInputDelay: 0.25
   dashCoolTime: 2
-  onGround: 1
+  onGround: 0
+  sprinting: 0
   moving: 0
   dashing: 0
   dashCooldown: 0
@@ -202,6 +203,11 @@ MonoBehaviour:
   jumpInputCooldown: 0
   rigidBodyRef: {fileID: 7887163104306279294}
   model: {fileID: 6620121360142238375}
+  capsule: {fileID: 4220183114106105608}
+  red: {fileID: 2100000, guid: 346b29f08cd1bbc4cb1791174bc823c2, type: 2}
+  green: {fileID: 2100000, guid: f0ca8cf9bd4c22e4f8f9a2b638170936, type: 2}
+  blue: {fileID: 2100000, guid: 77ea20e09b775174dbc4b06effe2f915, type: 2}
+  silver: {fileID: 2100000, guid: 7e47c2c8d6e6e0640b01693c19c98f17, type: 2}
   direction: {x: 0, y: 0, z: 0}
   mainCam: {fileID: 0}
 --- !u!1 &4220183114106105608
