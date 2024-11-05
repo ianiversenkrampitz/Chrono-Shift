@@ -27,6 +27,7 @@ public class VampireStats : MonoBehaviour
     // maximum velocities
     public float vampireWalkMaxVelocity = 17f;
     public float vampireSprintMaxVelocity = 27f;
+    public float vampireGravityMaxVelocity = 30f;
 
     // holds reference to player
     public PlayerController controller;
@@ -51,5 +52,6 @@ public class VampireStats : MonoBehaviour
         // maximum velocities
         controller.walkMaxVelocity = vampireWalkMaxVelocity;
         controller.sprintMaxVelocity = vampireSprintMaxVelocity;
+        controller.gravityMaxVelocity = vampireGravityMaxVelocity;
     }
 }
