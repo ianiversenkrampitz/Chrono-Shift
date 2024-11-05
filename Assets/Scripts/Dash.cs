@@ -23,7 +23,7 @@ public class Dash : MonoBehaviour
         // if player presses shift apply a force forwards
     private void DashMove()
     {
-        // if the player is on the ground and presses shift, dash
+        // if cooldown has ended and player presses dash, dash 
         if (controller.playerInputActions.PlayerActions.Dash.WasPerformedThisFrame() && !controller.dashCooldown)
         {
             // apply force
@@ -41,7 +41,7 @@ public class Dash : MonoBehaviour
         // set dashing to true
         controller.dashing = true;
         Debug.Log("dash has started");
-        // wait .25 second
+        // wait .25 seconds
         yield return new WaitForSeconds(.25f);
         // stop dashing
         controller.dashing = false;
@@ -54,7 +54,7 @@ public class Dash : MonoBehaviour
         // set dash cooldown to true
         controller.dashCooldown = true;
         Debug.Log("dash cooldown has started");
-        // wait .25 seconds for dash, wait 5 seconds for dash cooldown
+        //wait length of cooldown to use again 
         yield return new WaitForSeconds(controller.dashCoolTime);
         // turn off dashCooldown
         controller.dashCooldown = false;
