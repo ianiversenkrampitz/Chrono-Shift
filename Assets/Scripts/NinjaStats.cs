@@ -27,6 +27,7 @@ public class NinjaStats : MonoBehaviour
     // maximum velocities
     public float ninjaWalkMaxVelocity = 17f;
     public float ninjaSprintMaxVelocity = 27f;
+    public float ninjaGravityMaxVelocity = 30f;
 
     // holds reference to player
     public PlayerController controller;
@@ -51,5 +52,7 @@ public class NinjaStats : MonoBehaviour
         // maximum velocities
         controller.walkMaxVelocity = ninjaWalkMaxVelocity;
         controller.sprintMaxVelocity = ninjaSprintMaxVelocity;
+        controller.gravityMaxVelocity = ninjaGravityMaxVelocity;
+
     }
 }
