@@ -186,7 +186,7 @@ MonoBehaviour:
   slowSpeed: 1.25
   gravitySpeed: 40
   glideGravity: 5
-  jumpForce: 20
+  jumpForce: 10
   dashForce: 30
   sprintForce: 2
   walkMaxVelocity: 13
@@ -200,7 +200,11 @@ MonoBehaviour:
   dashing: 0
   dashCooldown: 0
   gliding: 0
-  jumpInputCooldown: 0
+  hasJumped: 0
+  dashInput: 0
+  glideInput: 0
+  sprintInput: 0
+  jumpInput: 0
   rigidBodyRef: {fileID: 7887163104306279294}
   model: {fileID: 6620121360142238375}
   capsule: {fileID: 4220183114106105608}

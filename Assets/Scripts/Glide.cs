@@ -21,8 +21,7 @@ public class Glide : MonoBehaviour
 
     public void Gliding()
     {
-        if (controller.playerInputActions.PlayerActions.Glide.WasPerformedThisFrame()
-            && !controller.jumpInputCooldown && !controller.onGround)
+        if (controller.glideInput && !controller.onGround)
         {
             controller.gliding = true;
             print("player is gliding");
@@ -31,9 +30,6 @@ public class Glide : MonoBehaviour
             Vector3 clampedVelocity = controller.rigidBodyRef.velocity.normalized;
             controller.rigidBodyRef.velocity = new Vector3(controller.rigidBodyRef.velocity.x,
                 0f, controller.rigidBodyRef.velocity.z);
-
-            // start jump input cooldown
-            StartCoroutine(controller.JumpInputCooldown());
         }
         else if (!controller.Moving())
         {
@@ -43,5 +39,6 @@ public class Glide : MonoBehaviour
         {
             controller.gliding = false;
         }
+        controller.glideInput = false;
     }
 }

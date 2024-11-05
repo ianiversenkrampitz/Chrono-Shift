@@ -24,7 +24,7 @@ public class Dash : MonoBehaviour
     private void DashMove()
     {
         // if cooldown has ended and player presses dash, dash 
-        if (controller.playerInputActions.PlayerActions.Dash.WasPerformedThisFrame() && !controller.dashCooldown)
+        if (controller.dashInput && !controller.dashCooldown)
         {
             // apply force
             controller.rigidBodyRef.AddForce(controller.direction * controller.dashForce, ForceMode.Impulse);
@@ -33,8 +33,10 @@ public class Dash : MonoBehaviour
             StartCoroutine(DashTimer());
             StartCoroutine(DashCooldownTimer());
         }
+        // ensure dash input is off
+        controller.dashInput = false;
     }
-
+       
     // timer for dash
     IEnumerator DashTimer()
     {

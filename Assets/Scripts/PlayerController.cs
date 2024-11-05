@@ -9,7 +9,7 @@ using UnityEngine.InputSystem.XR;
 /// <summary>
 /// Monaghan, Devin
 /// Iversen-Krampitz, Ian 
-/// 11/2/2024
+/// 11/4/2024
 /// handles deathfloor
 /// handles WASD movement
 /// handles jumping
@@ -54,7 +54,12 @@ public class PlayerController : MonoBehaviour
     // is the player currently gliding
     public bool gliding;
     // did the player just press jump
-    public bool jumpInputCooldown;
+    public bool hasJumped;
+    // did the player input these actions?
+    public bool dashInput = false;
+    public bool glideInput = false;
+    public bool sprintInput = false;
+    public bool jumpInput = false;
 
     // reference to rigidbody
     public Rigidbody rigidBodyRef;
@@ -98,7 +103,13 @@ public class PlayerController : MonoBehaviour
         print(mainCam.forward);
     }
 
-    // handles physics controlled movement
+    // called every frame
+    private void Update()
+    {
+        Inputs();
+    }
+
+    // called every fixed frame
     protected virtual void FixedUpdate()
     {
         // check if the player is on the ground or not
@@ -241,7 +252,7 @@ public class PlayerController : MonoBehaviour
     private bool Sprinting()
     {
         // if player presses ctrl start sprinting
-        if (playerInputActions.PlayerActions.Sprint.WasPerformedThisFrame())
+        if (sprintInput)
         {
             sprinting = true;
             rigidBodyRef.AddForce(model.forward * sprintForce, ForceMode.Impulse);
@@ -252,10 +263,13 @@ public class PlayerController : MonoBehaviour
             sprinting = false;
         }
 
+        // ensure sprint input is off
+        sprintInput = false;
+
         // return true in sprinting state and false out of sprinting state
         return sprinting;
     }
-
+       
     // check if player is on the ground via raycast
     private void OnGround()
     {
@@ -264,9 +278,11 @@ public class PlayerController : MonoBehaviour
 
         // send raycast down beneath model
         // if raycast collides with anything mark player as on the ground
-        if (Physics.Raycast(transform.position, Vector3.down, out hit, 1.51f))
+        if (Physics.Raycast(transform.position, Vector3.down, out hit, 1.505f))
         {
             onGround = true;
+            // the player is back on the ground so they may jump again
+            hasJumped = false;
         }
         else
         {
@@ -280,6 +296,9 @@ public class PlayerController : MonoBehaviour
         // if gliding apply reduced gravity
         if (gliding)
         {
+            // turn off physics gravity when not on ground
+            rigidBodyRef.useGravity = false;
+
             Vector3 gravityDirection = transform.position;
             gravityDirection.y -= glideGravity * Time.deltaTime;
             transform.position = gravityDirection;
@@ -287,9 +306,16 @@ public class PlayerController : MonoBehaviour
         // apply gravity when not on ground
         else if (!onGround)
         {
+            // turn off physics gravity when not on ground
+            rigidBodyRef.useGravity = false;
+            // turn off physics gravity when not on ground
             rigidBodyRef.AddForce(Vector3.down * gravitySpeed, ForceMode.Acceleration);
         }
-        
+        else
+        {
+            // use unity gravity on ground to make sure the player is proplerly on the floor
+            rigidBodyRef.useGravity = true;
+        }
         // clamp gravity speed
         Vector3 clampedVelocity;
         if (rigidBodyRef.velocity.magnitude > gravityMaxVelocity)
@@ -305,23 +331,19 @@ public class PlayerController : MonoBehaviour
     private void Jump()
     {
         // if the player is on the ground and presses the spacebar, jump
-        if (onGround && playerInputActions.PlayerActions.Jump.IsPressed() && !jumpInputCooldown)
+        if (onGround && jumpInput && !hasJumped)
         {
             rigidBodyRef.AddForce(model.up * jumpForce, ForceMode.Impulse);
 
-            // start jump input cooldown
-            StartCoroutine(JumpInputCooldown());
+            // set hasJumped to true so that you can only jump once
+            hasJumped = true;
         }
+
+        // ensure jump input is off
+        jumpInput = false;
     }
 
-    // dissallow player from inputting jump again for .5 seconds to prevent duplicate inputs on a single key press
-    public IEnumerator JumpInputCooldown()
-    {
-        jumpInputCooldown = true;
-        yield return new WaitForSeconds(jumpInputDelay);
-        jumpInputCooldown = false;
-    }
-
+    // sets player color differently depending on what action they are performing
     private void ColorChange()
     {
         if (dashCooldown)
@@ -341,6 +363,27 @@ public class PlayerController : MonoBehaviour
         else
         {
             capsule.GetComponent<Renderer>().material = silver;
+        }
+    }
+
+    // gets inputs in Update to be used in Fixed Update
+    private void Inputs()
+    {
+        if (playerInputActions.PlayerActions.Dash.IsPressed())
+        {
+            dashInput = true;
+        }
+        if (playerInputActions.PlayerActions.Glide.IsPressed())
+        {
+            glideInput = true;
+        }
+        if (playerInputActions.PlayerActions.Sprint.IsPressed())
+        {
+            sprintInput = true;
+        }
+        if (playerInputActions.PlayerActions.Jump.IsPressed())
+        {
+            jumpInput = true;
         }
     }
 }
