@@ -19,8 +19,8 @@ public class Dash : MonoBehaviour
         DashMove();
     }
 
-        // get dash inputs
-        // if player presses shift apply a force forwards
+    // get dash inputs
+    // if player presses shift apply a force forwards
     private void DashMove()
     {
         // if cooldown has ended and player presses dash, dash 

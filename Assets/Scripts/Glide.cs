@@ -39,6 +39,7 @@ public class Glide : MonoBehaviour
         {
             controller.gliding = false;
         }
+        // ensure glide input is off
         controller.glideInput = false;
     }
 }

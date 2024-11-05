@@ -9,11 +9,15 @@ using UnityEngine.InputSystem.XR;
 /// <summary>
 /// Monaghan, Devin
 /// Iversen-Krampitz, Ian 
-/// 11/4/2024
-/// handles deathfloor
+/// 11/5/2024
+/// holds major variables
 /// handles WASD movement
+/// handles model alignment
+/// handles glide movement
 /// handles jumping
-/// handles dash
+/// handles gravity
+/// handles inputs
+/// handles player color feedback
 /// </summary>
 
 public class PlayerController : MonoBehaviour
@@ -26,36 +30,29 @@ public class PlayerController : MonoBehaviour
     // gravity speed
     public float gravitySpeed = 15f;
     public float glideGravity = 5f;
-    // power of jump
+    // power of impulses
     public float jumpForce = 20f;
-    // power of dash
     public float dashForce = 30f;
-    // power of sprint boost
     public float sprintForce = 2f;
     // maximum velocities
     public float walkMaxVelocity = 2f;
     public float sprintMaxVelocity = 4f;
+    public float glideMaxVelocity = 6f;
     public float gravityMaxVelocity = 30f;
-    // # of seconds where player cannot input jump after already inputting
-    public float jumpInputDelay = .25f;
     // # of seconds of dash cooldown
     public float dashCoolTime = 2f;
 
-    // is the player on the ground
+    // is the player on the ground?
     public bool onGround;
-    // is the player sprinting or walking
-    public bool sprinting = false;
-    // is the player actively moving;
+    // is the player actively doing these actions?
     public bool moving = false;
-    // is the player actively dashing
+    public bool sprinting = false;
     public bool dashing = false;
-    // is the dash on cooldown
+    public bool gliding = false;
+    public bool swinging = false;
+    // is the player's dash on cooldown?
     public bool dashCooldown = false;
-    // is the player currently gliding
-    public bool gliding;
-    // did the player just press jump
-    public bool hasJumped;
-    // did the player input these actions?
+    // has the player inputted these actions?
     public bool dashInput = false;
     public bool glideInput = false;
     public bool sprintInput = false;
@@ -66,18 +63,16 @@ public class PlayerController : MonoBehaviour
     public Rigidbody rigidBodyRef;
     // reference to inputs
     public PlayerInputActions playerInputActions;
-
     // reference to model
     public Transform model;
-
-    // reference to capsule
-    public GameObject capsule;
-
+    // reference to capsule's renderer
+    public Renderer capsule;
     // references to different color materials
     public Material red;
     public Material green;
     public Material blue;
     public Material silver;
+    public Material purple;
 
     // direction holds movement inputs converted into Vector3
     public Vector3 direction;
@@ -100,8 +95,6 @@ public class PlayerController : MonoBehaviour
         // enable inputs
         playerInputActions = new PlayerInputActions();
         playerInputActions.Enable();
-
-        print(mainCam.forward);
     }
 
     // called every frame
@@ -136,7 +129,7 @@ public class PlayerController : MonoBehaviour
 
     // get movement inputs
     // move via applying force to rigidbody
-    private void Move()
+    private void Move()  
     {
         // get movement input values
         Vector2 vectorWASD = playerInputActions.PlayerActions.MoveWASD.ReadValue<Vector2>();
@@ -153,33 +146,48 @@ public class PlayerController : MonoBehaviour
         // set direction
         direction = (forward * vectorWASD.y + right * vectorWASD.x).normalized;
 
+        // move if moving
         if (Moving())
         {
             // holds clamped Velocity of player
             Vector3 clampedVelocity;
 
-            // apply force
-            // clamp velocity
+            // move at sprint speed if sprinting
             if (sprinting)
             {
-                // apply force at sprint speed
+                // apply acceleration
                 rigidBodyRef.AddForce(direction * sprintSpeed, ForceMode.Acceleration);
 
                 // normalize velocity to preserve direction
-                // set velocity to max sprint velocity
+                // clamp velocity
                 if (rigidBodyRef.velocity.magnitude > sprintMaxVelocity)
                 {
                     clampedVelocity = rigidBodyRef.velocity.normalized * sprintMaxVelocity;
                     rigidBodyRef.velocity = new Vector3(clampedVelocity.x, rigidBodyRef.velocity.y, clampedVelocity.z);
                 }
             }
+            // move at glide speed if gliding
+            else if (gliding)
+            {
+                // apply acceleration
+                rigidBodyRef.AddForce(direction * glideSpeed, ForceMode.Acceleration);
+
+                // normalize velocity to preserve direction
+                // clamp velocity
+                if (rigidBodyRef.velocity.magnitude > glideMaxVelocity)
+                {
+                    clampedVelocity = rigidBodyRef.velocity.normalized * glideMaxVelocity;
+                    rigidBodyRef.velocity = new Vector3(clampedVelocity.x, rigidBodyRef.velocity.y, clampedVelocity.z);
+                }
+            }
+            // move at walk speed
             else
             {
-                // apply force at walk speed
+                // apply acceleration
                 rigidBodyRef.AddForce(direction * walkSpeed, ForceMode.Acceleration);
 
                 // normalize velocity to preserve direction
-                // set velocity to max walk velocity
+                // clamp velocity
                 if (rigidBodyRef.velocity.magnitude > walkMaxVelocity)
                 {
                     clampedVelocity = rigidBodyRef.velocity.normalized * walkMaxVelocity;
@@ -189,10 +197,10 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    // rotate model with direction it is moving regardless of camera direction
+    // rotate model with direction it is moving independent of camera direction
     private void ModelAlign()
     {
-        // make model look in direction player is heading only when moving
+        // make model look in direction player is heading when moving
         if (Moving())
         {
             Quaternion toRotation = Quaternion.LookRotation(direction, Vector3.up);
@@ -200,7 +208,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    // when player is not moving rapidly slow down (only for x and z movement)
+    // when player is not moving, rapidly slow down (only for x and z movement)
     private void SlowDown()
     {
         if (!Moving() && !dashing && rigidBodyRef.velocity != Vector3.zero)
@@ -227,9 +235,8 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    // get sprint input
-    // when player starts moving enter moving state
-    // when player stops inputting movements exit moving state
+    // get movement input
+    // when player inputs movement return true, else return false
     public bool Moving()
     {
         // get movement input
@@ -248,8 +255,10 @@ public class PlayerController : MonoBehaviour
     }
 
     // get sprint input
-    // when player presses control start sprinting
-    // when player stops inputting movements exit sprinting state
+    // when player presses shift turn sprinting on
+    // when player stops moving turn sprinting off
+    // return sprinting
+    // reset sprint input
     private bool Sprinting()
     {
         // if player presses ctrl start sprinting
@@ -282,15 +291,13 @@ public class PlayerController : MonoBehaviour
         if (Physics.Raycast(transform.position, Vector3.down, out hit, 1.505f))
         {
             onGround = true;
-            // the player is back on the ground so they may jump again
-            hasJumped = false;
         }
         else
         {
             onGround = false;
         }
     }
-
+     
     // if the player is not on the ground apply force down
     private void Gravity()
     {
@@ -304,7 +311,7 @@ public class PlayerController : MonoBehaviour
             gravityDirection.y -= glideGravity * Time.deltaTime;
             transform.position = gravityDirection;
         }
-        // apply gravity when not on ground
+        // apply gravity when in air
         else if (!onGround)
         {
             // turn off physics gravity when not on ground
@@ -314,10 +321,11 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
-            // use unity gravity on ground to make sure the player is proplerly on the floor
+            // use unity gravity on ground to make sure the player is properly on the floor
             rigidBodyRef.useGravity = true;
         }
-        // clamp gravity speed
+
+        // clamp gravity speed, so player doesnt accelerate down infinitely
         Vector3 clampedVelocity;
         if (rigidBodyRef.velocity.magnitude > gravityMaxVelocity)
         {
@@ -327,17 +335,20 @@ public class PlayerController : MonoBehaviour
     }
 
     // get jump inputs
-    // if player presses space apply a force up
-    // if player keeps pressing space float via continuous 
+    // if player presses space apply an impulse up
+    // reset jump inputs
     private void Jump()
     {
         // if the player is on the ground and presses the spacebar, jump
-        if (onGround && jumpInput && !hasJumped)
+        if (onGround && jumpInput)
         {
+            // apply impulse up
             rigidBodyRef.AddForce(model.up * jumpForce, ForceMode.Impulse);
-
-            // set hasJumped to true so that you can only jump once
-            hasJumped = true;
+        }
+        else if (!onGround && jumpInput && swinging)
+        {
+            // apply impulse up
+            rigidBodyRef.AddForce(model.up * jumpForce, ForceMode.Impulse);
         }
 
         // ensure jump input is off
@@ -349,25 +360,31 @@ public class PlayerController : MonoBehaviour
     {
         if (dashCooldown)
         {
-            capsule.GetComponent<Renderer>().material = red;
+            capsule.material = red;
             return;
         }
         else if (gliding)
         {
-            capsule.GetComponent<Renderer>().material = blue;
+
+            capsule.material = blue;
+            return;
+        }
+        else if (swinging)
+        {
+            capsule.material = purple;
             return;
         }
         else if (sprinting)
         {
-            capsule.GetComponent<Renderer>().material = green;
+             capsule.material = green;
         }
         else
         {
-            capsule.GetComponent<Renderer>().material = silver;
+             capsule.material = silver;
         }
     }
 
-    // gets inputs in Update to be used in Fixed Update
+    // retrieves inputs in Update where they'll be used in Fixed Update
     private void Inputs()
     {
         if (playerInputActions.PlayerActions.Dash.IsPressed())
