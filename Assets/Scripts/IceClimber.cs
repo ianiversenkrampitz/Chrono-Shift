@@ -22,6 +22,7 @@ public class IceClimber : MonoBehaviour
     public Vector3 pointDirection;
     public Material ropeMat;
     public bool isGrappling;
+    public bool grappleToggle;
     public LineRenderer lineRenderer;
     public SpringJoint joint;
 
@@ -30,6 +31,7 @@ public class IceClimber : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        grappleToggle = false;
         //for debug sphere drawing
         Gizmos.color = Color.red;
         //for drawing line from point to player 
@@ -47,12 +49,17 @@ public class IceClimber : MonoBehaviour
     
     public void FixedUpdate()
     {
+        //
         distanceFromPoint = (pointPosition - transform.position).magnitude;
         pointDirection = (pointPosition - transform.position);
         //can only be used in midair 
         if (!controller.onGround)
         {
-            if (controller.playerInputActions.PlayerActions.Swing.IsPressed())
+            if (controller.swingInput)
+            {
+                StartCoroutine(GrappleToggle());
+            }
+            if (grappleToggle)
             {
                 //Debug.Log("Pressed swing");
                 Grapple();
@@ -74,6 +81,7 @@ public class IceClimber : MonoBehaviour
         }
         else
         {
+            pointPosition = transform.position;
             //disables line 
             lineRenderer.SetPosition(0, transform.position);
             lineRenderer.SetPosition(1, transform.position);
@@ -81,6 +89,7 @@ public class IceClimber : MonoBehaviour
             joint.spring = 0f;
             joint.damper = 0f;
         }
+        controller.swingInput = false;
     }
     /// <summary>
     /// does grappling code 
@@ -124,7 +133,7 @@ public class IceClimber : MonoBehaviour
 
         //if not holding a direction, apply force towards center of point 
        
-        if (!controller.playerInputActions.PlayerActions.MoveWASD.IsPressed() && (distanceFromPoint > ropeLength))
+        if (!controller.Moving() && (distanceFromPoint > ropeLength))
         {
             Debug.Log("Pushing back" + pointDirection);
             controller.rigidBodyRef.AddForce(pointDirection * pushForce, ForceMode.Impulse);
@@ -146,7 +155,7 @@ public class IceClimber : MonoBehaviour
     public IEnumerator Grappling()
     {
         //swing if pressed 
-        while (controller.playerInputActions.PlayerActions.Swing.IsPressed())
+        while (grappleToggle)
         {
             isGrappling = true;
             //swing towards center of object with fixed momentum 
@@ -165,5 +174,19 @@ public class IceClimber : MonoBehaviour
 
         Debug.Log("no longer grappling");
         isGrappling = false;
+    }
+    public IEnumerator GrappleToggle()
+    {
+        if (!grappleToggle)
+        {
+            grappleToggle = true;
+        }
+        else
+        {
+            grappleToggle = false;
+        }
+
+        controller.swingInput = false;
+        yield return new WaitForSeconds(.5f);
     }
 }

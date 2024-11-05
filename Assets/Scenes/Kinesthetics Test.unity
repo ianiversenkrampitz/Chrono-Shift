@@ -9282,8 +9282,8 @@ MonoBehaviour:
   sphereMaxDistance: 10
   ropeLength: 0
   distanceFromPoint: 0
-  springiness: 2
-  dampening: 5
+  springiness: 3
+  dampening: 2
   maxPushForce: 1
   pointPosition: {x: 0, y: 0, z: 0}
   pointDirection: {x: 0, y: 0, z: 0}
@@ -10089,17 +10089,17 @@ PrefabInstance:
     - target: {fileID: 1885331946426977041, guid: 61ddce0dfa87c7749a1c103e7726e5bd,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0.003889158
+      value: -0.0038891602
       objectReference: {fileID: 0}
     - target: {fileID: 1885331946426977041, guid: 61ddce0dfa87c7749a1c103e7726e5bd,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0.00000001730239
+      value: 0.000000017380838
       objectReference: {fileID: 0}
     - target: {fileID: 1885331946426977041, guid: 61ddce0dfa87c7749a1c103e7726e5bd,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: 6.729225e-11
+      value: 6.759738e-11
       objectReference: {fileID: 0}
     - target: {fileID: 3267206519748940096, guid: 61ddce0dfa87c7749a1c103e7726e5bd,
         type: 3}
