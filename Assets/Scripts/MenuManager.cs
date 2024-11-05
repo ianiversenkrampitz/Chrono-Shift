@@ -5,12 +5,15 @@ using UnityEngine.SceneManagement;
 
 /// <summary>
 /// Monaghan, Devin
-/// 5/8/2024
+/// 11/5/2024
 /// Handles menu buttons
+/// handles scene transitions
 /// </summary>
 
 public class MenuManager : MonoBehaviour
 {
+    public int thisScene = 0;
+
     // quits game
     public void Quit()
     {
@@ -18,9 +21,9 @@ public class MenuManager : MonoBehaviour
         print("Player has quit game");
     }
 
-    // starts game
-    public void Play()
+    // moves to next scene
+    public void NextScene()
     {
-        SceneManager.LoadScene(1);
+        SceneManager.LoadScene(thisScene + 1);
     }
 }
