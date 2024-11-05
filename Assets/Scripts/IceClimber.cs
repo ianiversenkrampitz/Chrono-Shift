@@ -20,7 +20,7 @@ public class IceClimber : MonoBehaviour
     public float maxPushForce;
     public Vector3 pointPosition;
     public Vector3 pointDirection;
-    public Material lineMat;
+    public Material ropeMat;
     public bool isGrappling;
     public LineRenderer lineRenderer;
     public SpringJoint joint;
@@ -38,7 +38,7 @@ public class IceClimber : MonoBehaviour
         {
             lineRenderer = gameObject.AddComponent<LineRenderer>();
         }
-        lineRenderer.material = lineMat;
+        lineRenderer.material = ropeMat;
         lineRenderer.widthMultiplier = .2f;
         //sets up spring joints 
         joint = gameObject.AddComponent<SpringJoint>();

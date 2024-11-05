@@ -60,6 +60,7 @@ public class PlayerController : MonoBehaviour
     public bool glideInput = false;
     public bool sprintInput = false;
     public bool jumpInput = false;
+    public bool swingInput = false;
 
     // reference to rigidbody
     public Rigidbody rigidBodyRef;
@@ -384,6 +385,10 @@ public class PlayerController : MonoBehaviour
         if (playerInputActions.PlayerActions.Jump.IsPressed())
         {
             jumpInput = true;
+        }
+        if (playerInputActions.PlayerActions.Swing.IsPressed())
+        {
+            swingInput = true;
         }
     }
 }
