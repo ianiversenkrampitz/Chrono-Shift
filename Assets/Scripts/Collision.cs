@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 /* Iversen-Krampitz, Ian
  * Monaghan, Devin
- * 10/19/2024
+ * 11/5/2024
  * Controls collision. 
 */ 
 
@@ -44,6 +44,11 @@ public class Collision : MonoBehaviour
             playerController.rigidBodyRef.velocity = Vector3.zero;
             Debug.Log("died from bottomless pit");
             //add stuff to subtract health/lives and reset other variables here
+        }
+
+        if (other.gameObject.CompareTag("Level End"))
+        {
+            other.GetComponent<MenuManager>().NextScene();
         }
     }
 
