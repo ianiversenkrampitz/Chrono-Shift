@@ -14,18 +14,18 @@ public class IceClimber : MonoBehaviour
     public float sphereMaxDistance;
     public float ropeLength;
     public float distanceFromPoint;
-    public float springiness;
-    public float dampening;
-    public float maxPushForce;
-    public float pushForce;
+    public float swingSpeed;
+    public float correctSpeed;
     public Vector3 pointPosition;
     public Vector3 pointDirection;
     public Material ropeMat;
     public bool isGrappling;
     public bool grappleToggle;
     public bool canGrapple;
+    public bool detectedPoint;
     public LineRenderer lineRenderer;
-    public SpringJoint joint;
+    public HingeJoint joint;
+    public SpringJoint springJoint;
 
     public PlayerController controller;
 
@@ -44,51 +44,32 @@ public class IceClimber : MonoBehaviour
         }
         lineRenderer.material = ropeMat;
         lineRenderer.widthMultiplier = .2f;
-        //sets up spring joints 
-        joint = gameObject.AddComponent<SpringJoint>();
-        joint = GetComponent<SpringJoint>();      
     }
     
     public void FixedUpdate()
     {
-        pushForce = Mathf.Clamp(distanceFromPoint, 0f, maxPushForce);
         distanceFromPoint = (pointPosition - transform.position).magnitude;
         pointDirection = (pointPosition - transform.position);
         //can only be used in midair 
         if (!controller.onGround)
         {
+            //if input works and can grapple, toggle 
             if (controller.swingInput && canGrapple)
             {
                 StartCoroutine(GrappleToggle());
             }
-            if (grappleToggle)
+            //if toggle is true and a grapple point is detected, do swinging code
+            if (grappleToggle && detectedPoint)
             {
-                Pushback();
+                SwingMove();
             }
         }
-        if (isGrappling)
+        //if pressed again disconnect regardless 
+        else if (controller.swingInput)
         {
-            //draws line 
-            lineRenderer.SetPosition(0, transform.position);
-            lineRenderer.SetPosition(1, pointPosition);
-            //sets anchor point to point position
-            joint.connectedAnchor = pointPosition;
-            //sets springiness and damper
-            joint.spring = springiness;
-            joint.damper = dampening;
-            joint.maxDistance = ropeLength;
-            joint.minDistance = ropeLength;
+            StopSwinging();
         }
-        else
-        {
-            pointPosition = transform.position;
-            //disables line 
-            lineRenderer.SetPosition(0, transform.position);
-            lineRenderer.SetPosition(1, transform.position);
-            //sets springiness and damper to null to turn it off
-            joint.spring = 0f;
-            joint.damper = 0f;
-        }
+        UpdateLineRenderer();
         controller.swingInput = false;
     }
     /// <summary>
@@ -107,37 +88,54 @@ public class IceClimber : MonoBehaviour
                 //set pointposition to this point's position 
                 pointPosition = hitCollider.transform.position;
                 //set pointdistance to collider position - transform position 
-                ropeLength = (hitCollider.transform.position - transform.position).magnitude;
+                ropeLength = Vector3.Distance(hitCollider.transform.position, transform.position);
                 //start grappling coroutine 
-                StartCoroutine(Grappling());
+                detectedPoint = true;
                 //break so it doesnt choose multiple points if more than one is detected
                 Debug.Log("Grapple point detected");
                 break;
             }
             else
             {
+                detectedPoint = false;
                 Debug.Log("No grapple point detected");
             }
         }
     }
     /// <summary>
-    /// pushes character in opposite direction of swinging
+    /// movement while swinging 
     /// </summary>
-    private void Pushback()
-    {
-        //pushes the character in the opposite direction of movement,
-        //multiplied by distance from center point 
-        Debug.Log("normal pushback");
-        
-        controller.rigidBodyRef.AddForce(-controller.direction * pushForce, ForceMode.Impulse);
+    private void SwingMove()
+    { 
+        // Apply movement force based on input
+        Vector3 moveDirection = new Vector3(controller.vectorWASD.x, 0, controller.vectorWASD.y);
+        controller.rigidBodyRef.AddForce(moveDirection * swingSpeed, ForceMode.Force);
 
-        //if not holding a direction, apply force towards center of point 
-       
-        if (!controller.Moving() && (distanceFromPoint > ropeLength))
+        // Calculate the vector from the player to the grapple point
+        Vector3 toPoint = transform.position - pointPosition;
+        float currentDistance = toPoint.magnitude;
+
+        // If the player is farther than the rope length, apply a corrective force
+        if (currentDistance > ropeLength)
         {
-            Debug.Log("Pushing back" + pointDirection);
-            controller.rigidBodyRef.AddForce(pointDirection * pushForce, ForceMode.Impulse);
+            // Calculate the direction back to the grapple point
+            Vector3 correctiveDirection = toPoint.normalized;
+
+            // Apply a corrective force toward the grapple point
+            float excessDistance = currentDistance - ropeLength;
+            controller.rigidBodyRef.AddForce(-correctiveDirection * excessDistance * correctSpeed, ForceMode.Force);
         }
+    }
+
+
+    /// <summary>
+    /// stops swinging 
+    /// </summary>
+    private void StopSwinging()
+    {
+        grappleToggle = false;
+        controller.swinging = false;
+        detectedPoint = false;
     }
     /// <summary>
     /// debug for showing sphere
@@ -148,11 +146,45 @@ public class IceClimber : MonoBehaviour
         Gizmos.DrawWireSphere(transform.position, sphereRadius);
     }
 
+    private void UpdateLineRenderer()
+    {
+        if (detectedPoint)
+        {
+            //draws line 
+            lineRenderer.SetPosition(0, transform.position);
+            lineRenderer.SetPosition(1, pointPosition);
+        }
+        else
+        {
+            //disables line 
+            lineRenderer.SetPosition(0, transform.position);
+            lineRenderer.SetPosition(1, transform.position);
+        }
+    }
     /// <summary>
-    /// coroutine for grappling 
+    /// toggles grapple on and off 
     /// </summary>
     /// <returns></returns>
-    public IEnumerator Grappling()
+    public IEnumerator GrappleToggle()
+    {
+        Grapple();
+        canGrapple = false;
+        if (!grappleToggle && detectedPoint)
+        {
+            grappleToggle = true;
+            controller.swinging = true;
+        }
+        else
+        {
+            grappleToggle = false;
+            controller.swinging = false;
+        }
+        controller.swingInput = false;
+        yield return new WaitForSeconds(.5f);
+        canGrapple = true;
+    }
+    //unused for now 
+    /*public IEnumerator Grappling()
     {
         //swing if pressed 
         while (grappleToggle)
@@ -163,6 +195,8 @@ public class IceClimber : MonoBehaviour
             if (ropeLength > sphereMaxDistance)
             {
                 isGrappling = false;
+                controller.swinging = false;
+                grappleToggle = false;
                 Debug.Log("distance is " + ropeLength);
                 yield return null;
             }
@@ -175,25 +209,5 @@ public class IceClimber : MonoBehaviour
         Debug.Log("no longer grappling");
         isGrappling = false;
     }
-    /// <summary>
-    /// toggles grapple on and off 
-    /// </summary>
-    /// <returns></returns>
-    public IEnumerator GrappleToggle()
-    {
-        canGrapple = false;
-        if (!grappleToggle)
-        {
-            grappleToggle = true;
-            Grapple();
-        }
-        else
-        {
-            grappleToggle = false;
-            Grapple();
-        }
-        controller.swingInput = false;
-        yield return new WaitForSeconds(.5f);
-        canGrapple = true;
-    }
+    */
 }

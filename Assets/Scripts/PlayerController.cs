@@ -82,7 +82,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private Transform mainCam;
 
     // holds movement inputs
-    private Vector2 vectorWASD;
+    public Vector2 vectorWASD;
 
     // Awake is called before the first frame update
     void Awake()
@@ -107,21 +107,25 @@ public class PlayerController : MonoBehaviour
     // called every fixed frame
     protected virtual void FixedUpdate()
     {
-        // check if the player is on the ground or not
-        OnGround();
-        // check for if player is trying to sprint
-        Sprinting();
-        // move when not dashing
-        if (!dashing)
+        //do none of this if swinging 
+        if (!swinging)
         {
-            Move();
+            // check if the player is on the ground or not
+            OnGround();
+            // check for if player is trying to sprint
+            Sprinting();
+            // move when not dashing
+            if (!dashing)
+            {
+                Move();
+            }
+            // jump
+            Jump();
+            // slow down when not moving or dashing
+            SlowDown();
         }
-        // jump
-        Jump();
         // player falls in air
         Gravity();
-        // slow down when not moving or dashing
-        SlowDown();
         // align model rotation
         ModelAlign();
         // change color to provide feedback
@@ -180,11 +184,6 @@ public class PlayerController : MonoBehaviour
                     clampedVelocity = rigidBodyRef.velocity.normalized * glideMaxVelocity;
                     rigidBodyRef.velocity = new Vector3(clampedVelocity.x, rigidBodyRef.velocity.y, clampedVelocity.z);
                 }
-            }
-            //move with swing movement if swinging 
-            else if (swinging)
-            {
-                
             }
             // move at walk speed
             else
