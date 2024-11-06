@@ -5,38 +5,24 @@ using UnityEngine;
 /* 
  * Iversen-Krampitz, Ian
  * Monaghan, Devin
- * 10/30/2024
- * Controls ice climber mechanics. 
+ * 11/35/2024
+ * Controls ice climber mechanics
  */
-
+  
 public class SwingingV2 : MonoBehaviour
 {
-    public float sphereRadius;
-    public float sphereMaxDistance;
-    public float ropeLength;
-    public float distanceFromPoint;
-    public float springiness;
-    public float dampening;
-    public float maxPushForce;
-
-    // position of attached grapple point
-    // if no attached grapple point, transform.position
-    public Vector3 pointPosition;
-    public Vector3 pointDirection;
+    public float sphereRadius = 5f;
 
     // hold references
     public LineRenderer lineRenderer;
-    public SpringJoint joint;
-    public PlayerController controller;
+    public HingeJoint joint;
+    public SwingPlayer controller;
     // material of rope
     public Material ropeMat;
 
     // Start is called before the first frame update
     void Start()
     {
-        // set color of debug drawings
-        Gizmos.color = Color.red;
-
         // add line renderer component to player & set reference
         lineRenderer = gameObject.AddComponent<LineRenderer>();
         // set line material to look like rope
@@ -45,153 +31,102 @@ public class SwingingV2 : MonoBehaviour
         lineRenderer.widthMultiplier = .1f;
         // turn line renderer off so we're only drawing the rope when needed
         lineRenderer.enabled = false;
-
-        // add spring joint component to player & set reference
-        joint = gameObject.AddComponent<SpringJoint>();
     }
 
     // called every fixed frame
     public void FixedUpdate()
     {
-        // update distance from point and direction to point
-        distanceFromPoint = Vector3.Distance(pointPosition, transform.position);
-        pointDirection = (pointPosition - transform.position);
-
         // only detect input when in the air
         if (!controller.onGround)
         {
             if (controller.swingInput && !controller.swinging)
             {
-                FindPoint();
+                Swing();
+                controller.swingInput = false;
             }
         }
 
-
-
-
+        // if player stops swinging, destroy joint so the player is no longer attached to the grapple point
         if (!controller.swinging)
         {
-            pointPosition = transform.position;
+            Destroy(joint);
+            // controller.rigidBodyRef.freezeRotation = true;
+            controller.rigidBodyRef.constraints = RigidbodyConstraints.FreezeRotation;
         }
 
-        // can only be used in midair 
-        if (!controller.onGround)
-        {
-            Pushback();
-        }
-
-        // draw line to grapple point when attached
+        // draw line to grapple point when attached & swinging
         DrawLine();
 
         // ensure swing input is off
         controller.swingInput = false;
     }
 
-    // find a grapple point to attach to
-    private void FindPoint()
+    // called every time the joint is destroyed
+    private void OnJointBreak()
+    {
+        // reset & refreeze player's rotation
+        transform.rotation = new Quaternion(0f, transform.rotation.y, 0f, transform.rotation.w);
+
+        // if player cancelled swing with a jump, then
+        if (controller.jumpedOutOfSwing)
+        {
+            controller.rigidBodyRef.AddForce(controller.model.up * controller.jumpForce, ForceMode.Impulse);
+            controller.jumpedOutOfSwing = false;
+        }
+    }
+
+    // find a grapple point to attach to & swing from
+    private void Swing()
     {
         // Create a sphere around the player’s position with a given radius
         Collider[] hitColliders = Physics.OverlapSphere(transform.position, sphereRadius);
 
-        // Check each collider within the sphere
+        // sort through each collided object to find a grapple point
         foreach (Collider hitCollider in hitColliders)
         {
-            // if the collided object is a grapple point, select it to attach to and dismiss the rest
-            // begin swinging
+            // the collided object is a grapple, so attach to it and start swinging
             if (hitCollider.CompareTag("Grapple"))
             {
-                //set pointPosition to this grapple point's position
-                pointPosition = hitCollider.transform.position;
+                // begin swinging
+                controller.swinging = true;
 
-                //set pointdistance to collider position - transform position 
-                ropeLength = (hitCollider.transform.position - transform.position).magnitude;
+                // unfreeze player rotations
+                controller.rigidBodyRef.constraints =  RigidbodyConstraints.None;
 
-                //start grappling coroutine 
-                StartCoroutine(Grappling());
+                // add a joint to the player so that they swing around the grapple point
+                joint = gameObject.AddComponent<HingeJoint>();
+                // set joint's anchor to this grapple point's position so that the player swings around it
+                joint.anchor = hitCollider.transform.position - transform.position;
+                // set joint's axis according to the object
+                joint.axis = hitCollider.GetComponent<GrapplePoint>().axis;
+
+                // create a variable to hold the limits of the joint
+                JointLimits limits = joint.limits;
+                // set limits to distance from grapple so that the player stays the same distance from the grapple point
+                limits.min = Vector3.Distance(transform.position, hitCollider.transform.position);
+                limits.max = Vector3.Distance(transform.position, hitCollider.transform.position);
+                // set joint reference's limits & activate them
+                joint.limits = limits;
 
                 //break so it doesnt choose multiple points if more than one is detected
-                Debug.Log("Grapple point detected");
+                print("Grapple point detected");
+                print("anchor point = " + joint.connectedAnchor);
                 break;
             }
-            else
-            {
-                controller.swinging = false;
-                Debug.Log("No grapple point detected");
-            }
         }
     }
 
-    /// <summary>
-    /// pushes character in opposite direction of swinging
-    /// </summary>
-    private void Pushback()
-    {
-        //pushes the character in the opposite direction of movement,
-        //multiplied by distance from center point 
-        Debug.Log("normal pushback");
-        float pushForce = Mathf.Clamp(distanceFromPoint, 0f, maxPushForce);
-        controller.rigidBodyRef.AddForce(-controller.direction * pushForce, ForceMode.Impulse);
-
-        //if not holding a direction, apply force towards center of point 
-
-        if (!controller.Moving() && (distanceFromPoint > ropeLength))
-        {
-            Debug.Log("Pushing back" + pointDirection);
-            controller.rigidBodyRef.AddForce(pointDirection * pushForce, ForceMode.Impulse);
-        }
-    }
-
-    /// <summary>
-    /// debug for showing sphere
-    /// </summary>
+    // debug for showing sphere
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(transform.position, sphereRadius);
     }
 
-    /// <summary>
-    /// coroutine for grappling 
-    /// </summary>
-    /// <returns></returns>
-    public IEnumerator Grappling()
-    {
-        //swing if
-        while (controller.swinging)
-        {
-            //swing towards center of object with fixed momentum 
-            //check if the player's distance is farther than rope length
-            if (ropeLength > sphereMaxDistance)
-            {
-                controller.swinging = false;
-                Debug.Log("distance is " + ropeLength);
-                yield return null;
-            }
-            else
-            {
-                yield return null;
-            }
-        }
-
-        Debug.Log("no longer grappling");
-        controller.swinging = false;
-    }
-
-    // gets inputs
-    public void Input()
-    {
-        // if the player has pressed the swing button and isn't already mid swing
-        if (controller.swingInput && !controller.swinging)
-        {
-            controller.swinging = true;
-            print("player has input swing");
-        }
-    }
-
-    // draws line
+    // draws rope
     public void DrawLine()
     {
-        // if attached to a grapple point, draw a rope to it 
+        // if swinging draw a rope to the grapple position 
         if (controller.swinging)
         {
             // turn on line renderer since we're using it
@@ -199,19 +134,12 @@ public class SwingingV2 : MonoBehaviour
 
             //draws line from player to grapple point
             lineRenderer.SetPosition(0, transform.position);
-            lineRenderer.SetPosition(1, pointPosition);
+            lineRenderer.SetPosition(1, joint.connectedAnchor);
         }
         else
         {
+            // turn off line renderer when not swinging
             lineRenderer.enabled = false;
         }
     }
-
-
-    /*
-            //sets springiness and damper to null to turn it off
-            joint.spring = 0f;
-            joint.damper = 0f;
-
-    */
 }
