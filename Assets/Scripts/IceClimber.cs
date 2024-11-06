@@ -4,7 +4,6 @@ using Unity.VisualScripting;
 using UnityEngine;
 /* 
  * Iversen-Krampitz, Ian
- * Monaghan, Devin
  * 11/5/2024
  * Controls ice climber mechanics. 
  */
@@ -18,6 +17,7 @@ public class IceClimber : MonoBehaviour
     public float springiness;
     public float dampening;
     public float maxPushForce;
+    public float pushForce;
     public Vector3 pointPosition;
     public Vector3 pointDirection;
     public Material ropeMat;
@@ -51,7 +51,7 @@ public class IceClimber : MonoBehaviour
     
     public void FixedUpdate()
     {
-        //
+        pushForce = Mathf.Clamp(distanceFromPoint, 0f, maxPushForce);
         distanceFromPoint = (pointPosition - transform.position).magnitude;
         pointDirection = (pointPosition - transform.position);
         //can only be used in midair 
@@ -128,7 +128,7 @@ public class IceClimber : MonoBehaviour
         //pushes the character in the opposite direction of movement,
         //multiplied by distance from center point 
         Debug.Log("normal pushback");
-        float pushForce = Mathf.Clamp(distanceFromPoint, 0f, maxPushForce);
+        
         controller.rigidBodyRef.AddForce(-controller.direction * pushForce, ForceMode.Impulse);
 
         //if not holding a direction, apply force towards center of point 

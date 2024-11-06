@@ -181,6 +181,11 @@ public class PlayerController : MonoBehaviour
                     rigidBodyRef.velocity = new Vector3(clampedVelocity.x, rigidBodyRef.velocity.y, clampedVelocity.z);
                 }
             }
+            //move with swing movement if swinging 
+            else if (swinging)
+            {
+                
+            }
             // move at walk speed
             else
             {
@@ -311,10 +316,6 @@ public class PlayerController : MonoBehaviour
             Vector3 gravityDirection = transform.position;
             gravityDirection.y -= glideGravity * Time.deltaTime;
             transform.position = gravityDirection;
-        }
-        if (isGrappling)
-        {
-
         }
         // apply gravity when in air
         else if (!onGround)

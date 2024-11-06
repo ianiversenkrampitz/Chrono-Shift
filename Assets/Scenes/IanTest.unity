@@ -1825,13 +1825,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 62eba0d4a05fa454bb53589568dc4c2a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sphereRadius: 6
-  sphereMaxDistance: 10
+  sphereRadius: 10
+  sphereMaxDistance: 20
   ropeLength: 0
   distanceFromPoint: 0
-  springiness: 2
+  springiness: 5
   dampening: 2
-  maxPushForce: 1
+  maxPushForce: 0.6
+  pushForce: 0
   pointPosition: {x: 0, y: 0, z: 0}
   pointDirection: {x: 0, y: 0, z: 0}
   ropeMat: {fileID: 2100000, guid: 7e3c00fc067860e449c5aeea634483a6, type: 2}
