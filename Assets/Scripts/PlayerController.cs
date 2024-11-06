@@ -30,6 +30,7 @@ public class PlayerController : MonoBehaviour
     // gravity speed
     public float gravitySpeed = 15f;
     public float glideGravity = 5f;
+    public float grappleGravity = 1f;
     // power of impulses
     public float jumpForce = 20f;
     public float dashForce = 30f;
@@ -310,6 +311,10 @@ public class PlayerController : MonoBehaviour
             Vector3 gravityDirection = transform.position;
             gravityDirection.y -= glideGravity * Time.deltaTime;
             transform.position = gravityDirection;
+        }
+        if (isGrappling)
+        {
+
         }
         // apply gravity when in air
         else if (!onGround)

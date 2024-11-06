@@ -5,7 +5,7 @@ using UnityEngine;
 /* 
  * Iversen-Krampitz, Ian
  * Monaghan, Devin
- * 10/30/2024
+ * 11/5/2024
  * Controls ice climber mechanics. 
  */
 
@@ -23,6 +23,7 @@ public class IceClimber : MonoBehaviour
     public Material ropeMat;
     public bool isGrappling;
     public bool grappleToggle;
+    public bool canGrapple;
     public LineRenderer lineRenderer;
     public SpringJoint joint;
 
@@ -31,6 +32,7 @@ public class IceClimber : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        canGrapple = true;
         grappleToggle = false;
         //for debug sphere drawing
         Gizmos.color = Color.red;
@@ -55,14 +57,12 @@ public class IceClimber : MonoBehaviour
         //can only be used in midair 
         if (!controller.onGround)
         {
-            if (controller.swingInput)
+            if (controller.swingInput && canGrapple)
             {
                 StartCoroutine(GrappleToggle());
             }
             if (grappleToggle)
             {
-                //Debug.Log("Pressed swing");
-                Grapple();
                 Pushback();
             }
         }
@@ -175,18 +175,25 @@ public class IceClimber : MonoBehaviour
         Debug.Log("no longer grappling");
         isGrappling = false;
     }
+    /// <summary>
+    /// toggles grapple on and off 
+    /// </summary>
+    /// <returns></returns>
     public IEnumerator GrappleToggle()
     {
+        canGrapple = false;
         if (!grappleToggle)
         {
             grappleToggle = true;
+            Grapple();
         }
         else
         {
             grappleToggle = false;
+            Grapple();
         }
-
         controller.swingInput = false;
         yield return new WaitForSeconds(.5f);
+        canGrapple = true;
     }
 }
