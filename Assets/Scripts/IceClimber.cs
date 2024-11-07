@@ -4,7 +4,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 /* 
  * Iversen-Krampitz, Ian
- * 11/5/2024
+ * 11/6/2024
  * Controls ice climber mechanics. 
  */
 
@@ -14,26 +14,19 @@ public class IceClimber : MonoBehaviour
     public float sphereMaxDistance;
     public float ropeLength;
     public float distanceFromPoint;
-    public float swingSpeed;
-    public float correctSpeed;
-    public Vector3 pointPosition;
+    public float swingForce;
+    public bool grappleToggle;
+    public Vector3 grapplePoint;
     public Vector3 pointDirection;
     public Material ropeMat;
-    public bool isGrappling;
-    public bool grappleToggle;
-    public bool canGrapple;
-    public bool detectedPoint;
     public LineRenderer lineRenderer;
-    public HingeJoint joint;
-    public SpringJoint springJoint;
-
+    public SpringJoint joint;
     public PlayerController controller;
-
+    public Camera mainCam;
     // Start is called before the first frame update
     void Start()
     {
-        canGrapple = true;
-        grappleToggle = false;
+        grappleToggle = true;
         //for debug sphere drawing
         Gizmos.color = Color.red;
         //for drawing line from point to player 
@@ -45,32 +38,39 @@ public class IceClimber : MonoBehaviour
         lineRenderer.material = ropeMat;
         lineRenderer.widthMultiplier = .2f;
     }
-    
-    public void FixedUpdate()
+    // Update is called once every frame 
+    public void Update()
     {
-        distanceFromPoint = (pointPosition - transform.position).magnitude;
-        pointDirection = (pointPosition - transform.position);
         //can only be used in midair 
         if (!controller.onGround)
         {
             //if input works and can grapple, toggle 
-            if (controller.swingInput && canGrapple)
+            if (Input.GetMouseButtonDown(0) && grappleToggle)
             {
-                StartCoroutine(GrappleToggle());
+                Grapple();
+                Debug.Log("Pressed mouse down, grappling");
             }
-            //if toggle is true and a grapple point is detected, do swinging code
-            if (grappleToggle && detectedPoint)
+            else if (Input.GetMouseButtonDown(0) && !grappleToggle)
             {
-                SwingMove();
+                Debug.Log("Pressed mouse down, stop grappling");
+                StopGrappling();
             }
         }
         //if pressed again disconnect regardless 
-        else if (controller.swingInput)
+        else
         {
-            StopSwinging();
+            StopGrappling();
+            Debug.Log("Not on ground, dont grapple");
         }
+        //if grappling, use movement
+        if (!grappleToggle)
+        {
+            GrappleMove();
+        }
+        
+        
         UpdateLineRenderer();
-        controller.swingInput = false;
+       
     }
     /// <summary>
     /// does grappling code 
@@ -86,57 +86,74 @@ public class IceClimber : MonoBehaviour
             if (hitCollider.CompareTag("Grapple"))
             {
                 //set pointposition to this point's position 
-                pointPosition = hitCollider.transform.position;
-                //set pointdistance to collider position - transform position 
-                ropeLength = Vector3.Distance(hitCollider.transform.position, transform.position);
-                //start grappling coroutine 
-                detectedPoint = true;
+                grapplePoint = hitCollider.transform.position;
+                joint = gameObject.AddComponent<SpringJoint>();
+                joint.autoConfigureConnectedAnchor = false;
+                joint.connectedAnchor = grapplePoint;
+                distanceFromPoint = Vector3.Distance(transform.position, grapplePoint);
+
+                joint.maxDistance = distanceFromPoint * .8f;
+                joint.minDistance = distanceFromPoint * .25f;
+
+                joint.spring = 4.5f;
+                joint.damper = 7f;
+                joint.massScale = 4.5f;
+
+                grappleToggle = false;
+                controller.grappling = true;
                 //break so it doesnt choose multiple points if more than one is detected
                 Debug.Log("Grapple point detected");
                 break;
             }
             else
             {
-                detectedPoint = false;
+                grappleToggle = true;
+                controller.grappling = false;
                 Debug.Log("No grapple point detected");
             }
         }
     }
     /// <summary>
-    /// movement while swinging 
+    /// movement while grappling
     /// </summary>
-    private void SwingMove()
-    { 
-        // Apply movement force based on input
-        Vector3 moveDirection = new Vector3(controller.vectorWASD.x, 0, controller.vectorWASD.y);
-        controller.rigidBodyRef.AddForce(moveDirection * swingSpeed, ForceMode.Force);
+    private void GrappleMove()
+    {
+        Vector3 forceDirection = Vector3.zero;
 
-        // Calculate the vector from the player to the grapple point
-        Vector3 toPoint = transform.position - pointPosition;
-        float currentDistance = toPoint.magnitude;
+        // Get the camera's forward and right vectors, ignoring the y-axis
+        Vector3 cameraForward = mainCam.transform.forward;
+        cameraForward.y = 0;
+        cameraForward.Normalize();
 
-        // If the player is farther than the rope length, apply a corrective force
-        if (currentDistance > ropeLength)
+        Vector3 cameraRight = mainCam.transform.right;
+        cameraRight.y = 0;
+        cameraRight.Normalize();
+
+        if (Input.GetKey(KeyCode.W))
+            forceDirection += cameraForward;
+        if (Input.GetKey(KeyCode.S))
+            forceDirection += -cameraForward;
+        if (Input.GetKey(KeyCode.A))
+            forceDirection += -cameraRight;
+        if (Input.GetKey(KeyCode.D))
+            forceDirection += cameraRight;
+
+        if (forceDirection != Vector3.zero)
         {
-            // Calculate the direction back to the grapple point
-            Vector3 correctiveDirection = toPoint.normalized;
-
-            // Apply a corrective force toward the grapple point
-            float excessDistance = currentDistance - ropeLength;
-            controller.rigidBodyRef.AddForce(-correctiveDirection * excessDistance * correctSpeed, ForceMode.Force);
+            controller.rigidBodyRef.AddForce(forceDirection.normalized * swingForce, ForceMode.Force);
         }
     }
-
-
     /// <summary>
     /// stops swinging 
     /// </summary>
-    private void StopSwinging()
+    private void StopGrappling()
     {
-        grappleToggle = false;
-        controller.swinging = false;
-        detectedPoint = false;
+        print("stop grappling called");
+        Destroy(joint);
+        grappleToggle = true;
+        controller.grappling = false;
     }
+
     /// <summary>
     /// debug for showing sphere
     /// </summary>
@@ -146,13 +163,16 @@ public class IceClimber : MonoBehaviour
         Gizmos.DrawWireSphere(transform.position, sphereRadius);
     }
 
+    /// <summary>
+    /// creates rope 
+    /// </summary>
     private void UpdateLineRenderer()
     {
-        if (detectedPoint)
+        if (joint)
         {
             //draws line 
             lineRenderer.SetPosition(0, transform.position);
-            lineRenderer.SetPosition(1, pointPosition);
+            lineRenderer.SetPosition(1, grapplePoint);
         }
         else
         {
@@ -161,53 +181,4 @@ public class IceClimber : MonoBehaviour
             lineRenderer.SetPosition(1, transform.position);
         }
     }
-    /// <summary>
-    /// toggles grapple on and off 
-    /// </summary>
-    /// <returns></returns>
-    public IEnumerator GrappleToggle()
-    {
-        Grapple();
-        canGrapple = false;
-        if (!grappleToggle && detectedPoint)
-        {
-            grappleToggle = true;
-            controller.swinging = true;
-        }
-        else
-        {
-            grappleToggle = false;
-            controller.swinging = false;
-        }
-        controller.swingInput = false;
-        yield return new WaitForSeconds(.5f);
-        canGrapple = true;
-    }
-    //unused for now 
-    /*public IEnumerator Grappling()
-    {
-        //swing if pressed 
-        while (grappleToggle)
-        {
-            isGrappling = true;
-            //swing towards center of object with fixed momentum 
-            //check if the player's distance is farther than rope length
-            if (ropeLength > sphereMaxDistance)
-            {
-                isGrappling = false;
-                controller.swinging = false;
-                grappleToggle = false;
-                Debug.Log("distance is " + ropeLength);
-                yield return null;
-            }
-            else
-            {
-                yield return null;
-            }
-        }
-
-        Debug.Log("no longer grappling");
-        isGrappling = false;
-    }
-    */
 }

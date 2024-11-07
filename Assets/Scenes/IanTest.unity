@@ -1795,6 +1795,12 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 563756119}
   m_PrefabAsset: {fileID: 0}
+--- !u!20 &1578511070 stripped
+Camera:
+  m_CorrespondingSourceObject: {fileID: 742806293667832781, guid: 61ddce0dfa87c7749a1c103e7726e5bd,
+    type: 3}
+  m_PrefabInstance: {fileID: 563756119}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &2130638822 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3151516732391857096, guid: 1e1ee91bec648714bae534eae87d0f90,
@@ -1829,19 +1835,15 @@ MonoBehaviour:
   sphereMaxDistance: 15
   ropeLength: 0
   distanceFromPoint: 0
-  swingSpeed: 100
-  correctSpeed: 10
-  pointPosition: {x: 0, y: 0, z: 0}
+  swingForce: 3
+  grappleToggle: 0
+  grapplePoint: {x: 0, y: 0, z: 0}
   pointDirection: {x: 0, y: 0, z: 0}
   ropeMat: {fileID: 2100000, guid: 7e3c00fc067860e449c5aeea634483a6, type: 2}
-  isGrappling: 0
-  grappleToggle: 0
-  canGrapple: 0
-  detectedPoint: 0
   lineRenderer: {fileID: 0}
   joint: {fileID: 0}
-  springJoint: {fileID: 0}
   controller: {fileID: 2130638823}
+  mainCam: {fileID: 1578511070}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

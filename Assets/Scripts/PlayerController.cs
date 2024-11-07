@@ -50,7 +50,7 @@ public class PlayerController : MonoBehaviour
     public bool sprinting = false;
     public bool dashing = false;
     public bool gliding = false;
-    public bool swinging = false;
+    public bool grappling = false;
     // is the player's dash on cooldown?
     public bool dashCooldown = false;
     // has the player inputted these actions?
@@ -58,7 +58,6 @@ public class PlayerController : MonoBehaviour
     public bool glideInput = false;
     public bool sprintInput = false;
     public bool jumpInput = false;
-    public bool swingInput = false;
 
     // reference to rigidbody
     public Rigidbody rigidBodyRef;
@@ -108,7 +107,7 @@ public class PlayerController : MonoBehaviour
     protected virtual void FixedUpdate()
     {
         //do none of this if swinging 
-        if (!swinging)
+        if (!grappling)
         {
             // check if the player is on the ground or not
             OnGround();
@@ -350,7 +349,7 @@ public class PlayerController : MonoBehaviour
             // apply impulse up
             rigidBodyRef.AddForce(model.up * jumpForce, ForceMode.Impulse);
         }
-        else if (!onGround && jumpInput && swinging)
+        else if (!onGround && jumpInput && grappling)
         {
             // apply impulse up
             rigidBodyRef.AddForce(model.up * jumpForce, ForceMode.Impulse);
@@ -374,7 +373,7 @@ public class PlayerController : MonoBehaviour
             capsule.material = blue;
             return;
         }
-        else if (swinging)
+        else if (grappling)
         {
             capsule.material = purple;
             return;
@@ -407,10 +406,6 @@ public class PlayerController : MonoBehaviour
         if (playerInputActions.PlayerActions.Jump.IsPressed())
         {
             jumpInput = true;
-        }
-        if (playerInputActions.PlayerActions.Swing.IsPressed())
-        {
-            swingInput = true;
         }
     }
 }
