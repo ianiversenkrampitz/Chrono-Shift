@@ -186,12 +186,13 @@ MonoBehaviour:
   slowSpeed: 1.25
   gravitySpeed: 40
   glideGravity: 6.25
+  grappleGravity: 1
   jumpForce: 10
   dashForce: 30
   sprintForce: 2
   walkMaxVelocity: 13
   sprintMaxVelocity: 18
-  glideMaxVelcoty: 20
+  glideMaxVelocity: 6
   gravityMaxVelocity: 50
   dashCoolTime: 2
   onGround: 0
@@ -199,14 +200,12 @@ MonoBehaviour:
   sprinting: 0
   dashing: 0
   gliding: 0
-  jumping: 0
-  swinging: 0
+  grappling: 0
   dashCooldown: 0
   dashInput: 0
   glideInput: 0
   sprintInput: 0
   jumpInput: 0
-  swingInput: 0
   rigidBodyRef: {fileID: 7887163104306279294}
   model: {fileID: 6620121360142238375}
   capsule: {fileID: 510034236516486983}
@@ -217,6 +216,7 @@ MonoBehaviour:
   purple: {fileID: 2100000, guid: 362e703765b2b8844bf381b63bbcf3be, type: 2}
   direction: {x: 0, y: 0, z: 0}
   mainCam: {fileID: 0}
+  vectorWASD: {x: 0, y: 0}
 --- !u!1 &4220183114106105608
 GameObject:
   m_ObjectHideFlags: 0
@@ -231,7 +231,7 @@ GameObject:
   - component: {fileID: 2642826734280861421}
   m_Layer: 0
   m_Name: Capsule
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

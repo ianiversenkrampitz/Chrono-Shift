@@ -60,7 +60,6 @@ public class IceClimber : MonoBehaviour
         else
         {
             StopGrappling();
-            Debug.Log("Not on ground, dont grapple");
         }
         //if grappling, use movement
         if (!grappleToggle)
@@ -148,7 +147,6 @@ public class IceClimber : MonoBehaviour
     /// </summary>
     private void StopGrappling()
     {
-        print("stop grappling called");
         Destroy(joint);
         grappleToggle = true;
         controller.grappling = false;
