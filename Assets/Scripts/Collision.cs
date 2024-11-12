@@ -4,8 +4,9 @@ using UnityEngine;
 /* Iversen-Krampitz, Ian
  * Monaghan, Devin
  * 11/5/2024
- * Controls collision. 
-*/ 
+ * Controls collision
+ * handles health calculation
+*/
 
 public class Collision : MonoBehaviour
 {
@@ -13,7 +14,7 @@ public class Collision : MonoBehaviour
     public Vector3 spawnPoint;
 
     // reference playercontroller
-    public PlayerController playerController;
+    public PlayerController controller;
 
     // Start is called before the first frame update
     void Start()
@@ -22,10 +23,19 @@ public class Collision : MonoBehaviour
         //creates spawnpoint
     }
 
+    public void FixedUpdate()
+    {
+        // die when the player's health reaches 0 or less
+        if (controller.health <= 0f)
+        {
+            Die();
+        }
+    }
+
     // is called when object passes through a trigger
     public void OnTriggerEnter(Collider other)
     {
-        // set respawn point on collision with checkpoint
+        // set respawn point on trigger collision with checkpoint
         if (other.gameObject.CompareTag("Checkpoint"))
         {
             //changes spawnpoint to checkpoint's parent transform 
@@ -33,17 +43,10 @@ public class Collision : MonoBehaviour
             Debug.Log("hit new checkpoint");
         }
 
-        // respawn on collision with deathfloor
+        // die upon trigger collision with objects tagged death
         if (other.gameObject.CompareTag("Death"))
         {
-            // teleport to spawn position
-            transform.position = spawnPoint;
-            // reset rotation
-            transform.rotation = Quaternion.Euler(Vector3.zero);
-            // reset momentum
-            playerController.rigidBodyRef.velocity = Vector3.zero;
-            Debug.Log("died from bottomless pit");
-            //add stuff to subtract health/lives and reset other variables here
+            Die();
         }
 
         if (other.gameObject.CompareTag("Level End"))
@@ -56,10 +59,47 @@ public class Collision : MonoBehaviour
     public void OnCollisionEnter(UnityEngine.Collision other)
     {
         // if the collided object is a breakable and the player is dashing, set inactive the collided object
-        if (other.gameObject.CompareTag("Breakable") && playerController.dashing)
+        if (other.gameObject.CompareTag("Breakable") && controller.dashing)
         {
             other.gameObject.SetActive(false);
             Debug.Log("broke a wall");
         }
+
+        // die upon trigger collision with objects tagged death
+        if (other.gameObject.CompareTag("Death"))
+        {
+            Die();
+        }
+
+        // subtract health upon collision
+        if (other.gameObject.CompareTag("Hurt") && !controller.damageCooldown)
+        {
+            // subtract health
+            controller.health--;
+            // begin damage cooldown
+            StartCoroutine(DamageCooldown());
+        }
+    }
+
+    public void Die()
+    {
+        // teleport to spawn position
+        transform.position = spawnPoint;
+        // reset rotation
+        transform.rotation = Quaternion.Euler(Vector3.zero);
+        // reset momentum
+        controller.rigidBodyRef.velocity = Vector3.zero;
+        // ensure damage cooldown is off
+        controller.damageCooldown = false;
+        // reset player health
+        controller.health = controller.maxHealth;
+    }
+
+    // timer for damage cooldown
+    IEnumerator DamageCooldown()
+    {
+        controller.damageCooldown = true;
+        yield return new WaitForSeconds(1f);
+        controller.damageCooldown = false;
     }
 }

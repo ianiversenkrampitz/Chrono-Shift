@@ -6,7 +6,7 @@ using UnityEngine.SceneManagement;
 /// <summary>
 /// Monaghan, Devin
 /// 11/5/2024
-/// Handles menu buttons
+/// handles menu buttons
 /// handles scene transitions
 /// </summary>
 

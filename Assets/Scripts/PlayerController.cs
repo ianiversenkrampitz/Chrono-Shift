@@ -42,6 +42,10 @@ public class PlayerController : MonoBehaviour
     public float gravityMaxVelocity = 30f;
     // # of seconds of dash cooldown
     public float dashCoolTime = 2f;
+    // player's current health
+    public float health = 3f;
+    //player's max health
+    public float maxHealth = 3f;
 
     // is the player on the ground?
     public bool onGround;
@@ -53,6 +57,8 @@ public class PlayerController : MonoBehaviour
     public bool grappling = false;
     // is the player's dash on cooldown?
     public bool dashCooldown = false;
+    // is the player invulnerable momentarily after taking damage?
+    public bool damageCooldown = false;
     // has the player inputted these actions?
     public bool dashInput = false;
     public bool glideInput = false;
@@ -73,6 +79,7 @@ public class PlayerController : MonoBehaviour
     public Material blue;
     public Material silver;
     public Material purple;
+    public Material pink;
 
     // direction holds movement inputs converted into Vector3
     public Vector3 direction;
@@ -362,6 +369,11 @@ public class PlayerController : MonoBehaviour
     // sets player color differently depending on what action they are performing
     private void ColorChange()
     {
+        if (damageCooldown)
+        {
+            capsule.material = pink;
+            return;
+        }
         if (dashCooldown)
         {
             capsule.material = red;
