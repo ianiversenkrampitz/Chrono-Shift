@@ -2,8 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
-
-/* Iversen-Krampitz, Ian 
+/* 
+ * Iversen-Krampitz, Ian 
  * 11/10/2024
  * controls on screen text box object 
  */

@@ -1,7 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-/* Iversen-Krampitz, Ian
+/*
+ * Iversen-Krampitz, Ian
  * Monaghan, Devin
  * 11/5/2024
  * Controls collision
