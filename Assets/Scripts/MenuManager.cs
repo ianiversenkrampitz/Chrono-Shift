@@ -26,4 +26,10 @@ public class MenuManager : MonoBehaviour
     {
         SceneManager.LoadScene(thisScene + 1);
     }
+
+    //for system prototype build, loads the finale level 
+    public void FinalScene()
+    {
+        SceneManager.LoadScene(2);
+    }
 }
