@@ -11,23 +11,23 @@ using UnityEngine;
 public class ClimberStats : MonoBehaviour
 {
     // movement speeds
-    public float climberWalkSpeed = 100f;
-    public float climberSprintSpeed = 100f;
+    public float climberWalkSpeed = 70f;
+    public float climberSprintSpeed = 85f;
     public float climberGlideSpeed = 85f;
     public float climberSlowSpeed = 1.25f;
     // gravity speed
     public float climberGravitySpeed = 35f;
     public float climberGlideGravity = 5f;
     // power of jump
-    public float climberJumpForce = 15f;
+    public float climberJumpForce = 9f;
     // power of dash
     public float climberDashForce = 50f;
     // power of sprint boost
     public float climberSprintForce = 3f;
     // maximum velocities
-    public float climberWalkMaxVelocity = 17f;
-    public float climberSprintMaxVelocity = 27f;
-    public float climberGravityMaxVelocity = 30f;
+    public float climberWalkMaxVelocity = 13f;
+    public float climberSprintMaxVelocity = 18f;
+    public float climberGravityMaxVelocity = 50f;
 
     // holds reference to player
     public PlayerController controller;

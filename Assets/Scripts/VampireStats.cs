@@ -11,8 +11,8 @@ using UnityEngine;
 public class VampireStats : MonoBehaviour
 {
     // movement speeds
-    public float vampireWalkSpeed = 750f;
-    public float vampireSprintSpeed = 100f;
+    public float vampireWalkSpeed = 75f;
+    public float vampireSprintSpeed = 85f;
     public float vampireGlideSpeed = 85f;
     public float vampireSlowSpeed = 1.25f;
     // gravity speed
