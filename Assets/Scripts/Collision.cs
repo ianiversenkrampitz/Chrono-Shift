@@ -50,6 +50,12 @@ public class Collision : MonoBehaviour
             Die();
         }
 
+        if (other.gameObject.CompareTag("Collectable"))
+        {
+            other.gameObject.SetActive(false);
+            //put code for coin counter here 
+        }
+
         if (other.gameObject.CompareTag("Level End"))
         {
             other.GetComponent<MenuManager>().NextScene();

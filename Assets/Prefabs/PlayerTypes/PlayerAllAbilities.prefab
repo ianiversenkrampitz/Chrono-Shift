@@ -479,8 +479,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 62eba0d4a05fa454bb53589568dc4c2a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sphereRadius: 6
-  sphereMaxDistance: 10
+  sphereRadius: 12
+  sphereMaxDistance: 14
   ropeLength: 0
   distanceFromPoint: 0
   swingForce: 300
