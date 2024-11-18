@@ -14,8 +14,9 @@ public class Gate : MonoBehaviour
     public GameObject textBox;
     private void Update()
     {
-        //if this is a locked gate, set false when keys are 3 or more
-        if (keyNum >= 3 && isGate)
+        //if this is a locked gate, set false when keys are 3 or more 
+        //for some reason it counts the first key as 2, so 4 is the number
+        if (keyNum >= 4 && isGate)
         {
             this.gameObject.SetActive(false);
             textBox.SetActive(false);
