@@ -4,7 +4,7 @@ using UnityEngine;
 /*
  * Iversen-Krampitz, Ian
  * Monaghan, Devin
- * 11/5/2024
+ * 11/18/2024
  * Controls collision
  * handles health calculation
 */
@@ -20,8 +20,8 @@ public class Collision : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        // set initial spawn point
         spawnPoint = transform.position;
-        //creates spawnpoint
     }
 
     public void FixedUpdate()
@@ -39,8 +39,10 @@ public class Collision : MonoBehaviour
         // set respawn point on trigger collision with checkpoint
         if (other.gameObject.CompareTag("Checkpoint"))
         {
-            //changes spawnpoint to checkpoint's parent transform 
+            // changes spawnpoint to checkpoint's parent transform 
             spawnPoint = other.transform.parent.position;
+            // turn off the checkpoint
+            other.transform.parent.gameObject.SetActive(false);
             Debug.Log("hit new checkpoint");
         }
 
@@ -50,19 +52,22 @@ public class Collision : MonoBehaviour
             Die();
         }
 
+        // on collision with a collectable, delete the collectable and add to score
         if (other.gameObject.CompareTag("Collectable"))
         {
             other.gameObject.SetActive(false);
-            //put code for coin counter here 
+            // add to player score
+            controller.score++;
         }
 
+        // if the player collides with the level end object, move them to the next level
         if (other.gameObject.CompareTag("Level End"))
         {
-            other.GetComponent<MenuManager>().NextScene();
+            other.GetComponent<MenuManager>().SelectScene(other.GetComponent<MenuManager>().thisScene++);
         }
     }
 
-    // is caled when the object collides into something
+    // is called when the object collides with a non-trigger
     public void OnCollisionEnter(UnityEngine.Collision other)
     {
         // if the collided object is a breakable and the player is dashing, set inactive the collided object
@@ -87,7 +92,7 @@ public class Collision : MonoBehaviour
             StartCoroutine(DamageCooldown());
         }
     }
-
+    
     public void Die()
     {
         // teleport to spawn position
@@ -100,6 +105,12 @@ public class Collision : MonoBehaviour
         controller.damageCooldown = false;
         // reset player health
         controller.health = controller.maxHealth;
+        // subtract 3 from score, disallowing it to go below 0
+        controller.score -= 3f;
+        if (controller.score < 0f)
+        {
+            controller.score = 0f;
+        }
     }
 
     // timer for damage cooldown

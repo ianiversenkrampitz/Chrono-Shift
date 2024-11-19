@@ -9,7 +9,7 @@ using UnityEngine.InputSystem.XR;
 /// <summary>
 /// Monaghan, Devin
 /// Iversen-Krampitz, Ian 
-/// 11/5/2024
+/// 11/18/2024
 /// holds major variables
 /// handles WASD movement
 /// handles model alignment
@@ -44,8 +44,10 @@ public class PlayerController : MonoBehaviour
     public float dashCoolTime = 2f;
     // player's current health
     public float health = 3f;
-    //player's max health
+    // player's max health
     public float maxHealth = 3f;
+    // player's score
+    public float score = 0f;
 
     // is the player on the ground?
     public bool onGround;
@@ -83,6 +85,8 @@ public class PlayerController : MonoBehaviour
 
     // direction holds movement inputs converted into Vector3
     public Vector3 direction;
+    // transform player first spawns at
+    public Vector3 startPosition;
 
     // reference to camera
     [SerializeField] private Transform mainCam;
@@ -95,6 +99,9 @@ public class PlayerController : MonoBehaviour
     {
         // hide cursor
         Cursor.visible = false;
+
+        // set startPosition
+        startPosition = transform.position;
 
         // get rigidbody reference
         rigidBodyRef = this.GetComponent<Rigidbody>();

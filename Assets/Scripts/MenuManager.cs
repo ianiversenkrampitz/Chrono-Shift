@@ -5,14 +5,22 @@ using UnityEngine.SceneManagement;
 
 /// <summary>
 /// Monaghan, Devin
-/// 11/5/2024
+/// 11/18/2024
 /// handles menu buttons
 /// handles scene transitions
 /// </summary>
 
 public class MenuManager : MonoBehaviour
 {
+    // # of the current scene in the build index
     public int thisScene = 0;
+
+    // start is called at the first frame
+    public void Start()
+    {
+        thisScene = SceneManager.GetActiveScene().buildIndex;
+        print("This scene is #" + thisScene + " in the build index");
+    }
 
     // quits game
     public void Quit()
@@ -21,15 +29,9 @@ public class MenuManager : MonoBehaviour
         print("Player has quit game");
     }
 
-    // moves to next scene
-    public void NextScene()
+    // moves to scene number sceneNumber in the build index
+    public void SelectScene(int sceneNumber)
     {
-        SceneManager.LoadScene(thisScene + 1);
-    }
-
-    //for system prototype build, loads the finale level 
-    public void FinalScene()
-    {
-        SceneManager.LoadScene(2);
+        SceneManager.LoadScene(sceneNumber);
     }
 }

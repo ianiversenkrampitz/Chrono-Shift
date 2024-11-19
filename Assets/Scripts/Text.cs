@@ -2,9 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+
 /* 
  * Iversen-Krampitz, Ian 
- * 11/10/2024
+ * 11/18/2024
  * changes text box on canvas to trigger's message 
  */
 
@@ -24,27 +25,33 @@ public class Text : MonoBehaviour
     public float textTime;
     public TextManager textManager;
     public GameObject parentToDestroy;
+
     private void Start()
     {
         textManager = FindObjectOfType<TextManager>();
     }
+
     private void OnTriggerEnter(Collider other)
     {
-        //checks if hitting the player, if so show box and set text
+        // checks if hitting the player, if so show box and set text
         if (other.gameObject.CompareTag("Player"))
         {
             Debug.Log("hit a text trigger");
+            textManager.displaying = true;
             textManager.textBox.SetActive(true);
             textManager.managerText.text = thisText;
             textManager.managerText.color = textColor;
             textManager.managerText.fontSize = fontSize;    
         }
     }
+
     private void OnTriggerExit(Collider other)
     {
         //if exiting trigger, set text to false or start timer if timed box
         if (other.gameObject.CompareTag("Player"))
         {
+            textManager.displaying = false;
+
             if (timedText)
             {
                 StartCoroutine(TextTimer());
@@ -68,6 +75,7 @@ public class Text : MonoBehaviour
             }
         }
     }
+
     /// <summary>
     /// optional timer for text to remain on screen 
     /// </summary>
@@ -75,8 +83,12 @@ public class Text : MonoBehaviour
     public IEnumerator TextTimer()
     {
         yield return new WaitForSeconds(textTime);
-        textManager.textBox.SetActive(false);
-        textManager.managerText.text = ("");
+
+        if (!textManager.displaying)
+        {
+            textManager.textBox.SetActive(false);
+            textManager.managerText.text = ("");
+        }
         if (oneTime)
         {
             if (parentToDestroy != null)
