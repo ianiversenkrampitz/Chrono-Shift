@@ -279,8 +279,8 @@ public class PlayerController : MonoBehaviour
     // reset sprint input
     private bool Sprinting()
     {
-        // if player presses ctrl start sprinting
-        if (sprintInput)
+        // if player presses shift and is on the ground start sprinting
+        if (sprintInput && onGround)
         {
             sprinting = true;
             rigidBodyRef.AddForce(model.forward * sprintForce, ForceMode.Impulse);

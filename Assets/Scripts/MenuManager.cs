@@ -13,14 +13,7 @@ using UnityEngine.SceneManagement;
 public class MenuManager : MonoBehaviour
 {
     // # of the current scene in the build index
-    public int thisScene = 0;
-
-    // start is called at the first frame
-    public void Start()
-    {
-        thisScene = SceneManager.GetActiveScene().buildIndex;
-        print("This scene is #" + thisScene + " in the build index");
-    }
+    public int moveToScene = 0;
 
     // quits game
     public void Quit()

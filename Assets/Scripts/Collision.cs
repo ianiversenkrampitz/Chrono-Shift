@@ -63,7 +63,7 @@ public class Collision : MonoBehaviour
         // if the player collides with the level end object, move them to the next level
         if (other.gameObject.CompareTag("Level End"))
         {
-            other.GetComponent<MenuManager>().SelectScene(other.GetComponent<MenuManager>().thisScene++);
+            other.GetComponent<MenuManager>().SelectScene(other.GetComponent<MenuManager>().moveToScene);
         }
     }
 
