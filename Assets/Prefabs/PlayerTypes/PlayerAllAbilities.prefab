@@ -401,8 +401,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   walkSpeed: 75
-  sprintSpeed: 100
-  glideSpeed: 25
+  sprintSpeed: 85
+  glideSpeed: 85
   slowSpeed: 1.25
   gravitySpeed: 40
   glideGravity: 6.25
@@ -414,9 +414,10 @@ MonoBehaviour:
   sprintMaxVelocity: 18
   glideMaxVelocity: 6
   gravityMaxVelocity: 50
-  dashCoolTime: 2
+  dashCoolTime: 1
   health: 3
   maxHealth: 3
+  score: 0
   onGround: 0
   moving: 0
   sprinting: 0
@@ -439,6 +440,7 @@ MonoBehaviour:
   purple: {fileID: 2100000, guid: 362e703765b2b8844bf381b63bbcf3be, type: 2}
   pink: {fileID: 2100000, guid: f1f41e98c2eb37e49bb9c35eea9581c9, type: 2}
   direction: {x: 0, y: 0, z: 0}
+  startPosition: {x: 0, y: 0, z: 0}
   mainCam: {fileID: 0}
   vectorWASD: {x: 0, y: 0}
 --- !u!114 &655633770579740601

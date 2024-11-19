@@ -21,7 +21,7 @@ public class Glide : MonoBehaviour
 
     public void Gliding()
     {
-        if (controller.glideInput && !controller.onGround)
+        if (controller.glideInput && !controller.onGround && !controller.grappling)
         {
             controller.gliding = true;
             print("player is gliding");
@@ -36,6 +36,10 @@ public class Glide : MonoBehaviour
             controller.gliding = false;
         }
         else if (controller.onGround)
+        {
+            controller.gliding = false;
+        }
+        else if (controller.grappling)
         {
             controller.gliding = false;
         }

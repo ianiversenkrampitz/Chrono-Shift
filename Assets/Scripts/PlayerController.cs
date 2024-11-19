@@ -388,7 +388,6 @@ public class PlayerController : MonoBehaviour
         }
         else if (gliding)
         {
-
             capsule.material = blue;
             return;
         }

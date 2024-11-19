@@ -15,7 +15,7 @@ public class IceClimber : MonoBehaviour
     public float ropeLength;
     public float distanceFromPoint;
     public float swingForce;
-    public bool grappleToggle;
+    public bool grappleToggle = true;
     public Vector3 grapplePoint;
     public Vector3 pointDirection;
     public Material ropeMat;
@@ -23,10 +23,10 @@ public class IceClimber : MonoBehaviour
     public SpringJoint joint;
     public PlayerController controller;
     public Camera mainCam;
+
     // Start is called before the first frame update
     void Start()
     {
-        grappleToggle = true;
         //for debug sphere drawing
         Gizmos.color = Color.red;
         //for drawing line from point to player 
@@ -38,6 +38,7 @@ public class IceClimber : MonoBehaviour
         lineRenderer.material = ropeMat;
         lineRenderer.widthMultiplier = .2f;
     }
+
     // Update is called once every frame 
     public void Update()
     {
@@ -71,6 +72,7 @@ public class IceClimber : MonoBehaviour
         UpdateLineRenderer();
        
     }
+
     /// <summary>
     /// does grappling code 
     /// </summary>
@@ -112,6 +114,7 @@ public class IceClimber : MonoBehaviour
             }
         }
     }
+
     /// <summary>
     /// movement while grappling
     /// </summary>
@@ -142,6 +145,7 @@ public class IceClimber : MonoBehaviour
             controller.rigidBodyRef.AddForce(forceDirection.normalized * swingForce * Time.deltaTime, ForceMode.Force);
         }
     }
+
     /// <summary>
     /// stops swinging 
     /// </summary>
