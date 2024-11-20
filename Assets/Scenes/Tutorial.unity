@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.33973414, g: 0.58699435, b: 0.9786826, a: 1}
+  m_IndirectSpecularColor: {r: 0.33973336, g: 0.5870603, b: 0.97873354, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -36067,6 +36067,56 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 886292262450854630, guid: ef79a4b9a36ca8d4da890112356111e3,
+        type: 3}
+      propertyPath: m_LocalScale.x
+      value: 2.2995
+      objectReference: {fileID: 0}
+    - target: {fileID: 886292262450854630, guid: ef79a4b9a36ca8d4da890112356111e3,
+        type: 3}
+      propertyPath: m_LocalScale.y
+      value: 2.2995
+      objectReference: {fileID: 0}
+    - target: {fileID: 886292262450854630, guid: ef79a4b9a36ca8d4da890112356111e3,
+        type: 3}
+      propertyPath: m_LocalScale.z
+      value: 2.2995
+      objectReference: {fileID: 0}
+    - target: {fileID: 886292262450854630, guid: ef79a4b9a36ca8d4da890112356111e3,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 14
+      objectReference: {fileID: 0}
+    - target: {fileID: 886292262450854630, guid: ef79a4b9a36ca8d4da890112356111e3,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -45.385986
+      objectReference: {fileID: 0}
+    - target: {fileID: 982879091187365298, guid: ef79a4b9a36ca8d4da890112356111e3,
+        type: 3}
+      propertyPath: m_LocalScale.x
+      value: 2.2995
+      objectReference: {fileID: 0}
+    - target: {fileID: 982879091187365298, guid: ef79a4b9a36ca8d4da890112356111e3,
+        type: 3}
+      propertyPath: m_LocalScale.y
+      value: 2.2995
+      objectReference: {fileID: 0}
+    - target: {fileID: 982879091187365298, guid: ef79a4b9a36ca8d4da890112356111e3,
+        type: 3}
+      propertyPath: m_LocalScale.z
+      value: 2.2995
+      objectReference: {fileID: 0}
+    - target: {fileID: 982879091187365298, guid: ef79a4b9a36ca8d4da890112356111e3,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 14
+      objectReference: {fileID: 0}
+    - target: {fileID: 982879091187365298, guid: ef79a4b9a36ca8d4da890112356111e3,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 19
+      objectReference: {fileID: 0}
     - target: {fileID: 1840485600418090304, guid: ef79a4b9a36ca8d4da890112356111e3,
         type: 3}
       propertyPath: m_fontColor.b
@@ -36117,6 +36167,21 @@ PrefabInstance:
       propertyPath: controller
       value: 
       objectReference: {fileID: 4892398427619461113}
+    - target: {fileID: 5662967378233141434, guid: ef79a4b9a36ca8d4da890112356111e3,
+        type: 3}
+      propertyPath: m_UiScaleMode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5662967378233141434, guid: ef79a4b9a36ca8d4da890112356111e3,
+        type: 3}
+      propertyPath: m_ReferenceResolution.x
+      value: 1920
+      objectReference: {fileID: 0}
+    - target: {fileID: 5662967378233141434, guid: ef79a4b9a36ca8d4da890112356111e3,
+        type: 3}
+      propertyPath: m_ReferenceResolution.y
+      value: 1080
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
