@@ -290,6 +290,7 @@ GameObject:
   - component: {fileID: 7050806802731886738}
   - component: {fileID: 4892398426438860387}
   - component: {fileID: 5499834603562158674}
+  - component: {fileID: 8016058301857347960}
   m_Layer: 0
   m_Name: PlayerIceClimber
   m_TagString: Player
@@ -415,6 +416,7 @@ MonoBehaviour:
   dashCoolTime: 2
   health: 3
   maxHealth: 3
+  score: 0
   onGround: 0
   moving: 0
   sprinting: 0
@@ -437,6 +439,7 @@ MonoBehaviour:
   purple: {fileID: 2100000, guid: 362e703765b2b8844bf381b63bbcf3be, type: 2}
   pink: {fileID: 2100000, guid: f1f41e98c2eb37e49bb9c35eea9581c9, type: 2}
   direction: {x: 0, y: 0, z: 0}
+  startPosition: {x: 0, y: 0, z: 0}
   mainCam: {fileID: 0}
   vectorWASD: {x: 0, y: 0}
 --- !u!114 &5499834603562158674
@@ -464,3 +467,16 @@ MonoBehaviour:
   joint: {fileID: 0}
   controller: {fileID: 4892398426438860387}
   mainCam: {fileID: 0}
+--- !u!114 &8016058301857347960
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7058973513214097587}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3e3a01bc7efae384e9e98fff68e2f4a1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  controller: {fileID: 4892398426438860387}
