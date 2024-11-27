@@ -9,13 +9,13 @@ EditorBuildSettings:
     path: Assets/Scenes/Start.unity
     guid: 2a0414d50d05f8f469231c8ceec84c6c
   - enabled: 0
-    path: Assets/Scenes/Kinesthetics Test.unity
+    path: Assets/Scenes/Testing Scenes/Kinesthetics Test.unity
     guid: ec5f5e081469d7c4c9f302596f4b218c
   - enabled: 1
-    path: Assets/Scenes/SystemPrototypeStart.unity
+    path: Assets/Scenes/Testing Scenes/SystemPrototypeStart.unity
     guid: 81750a312aff7a448841f8661010e98f
   - enabled: 1
-    path: Assets/Scenes/Tutorial.unity
+    path: Assets/Scenes/Level 0 - Tutorial.unity
     guid: 99c9720ab356a0642a771bea13969a05
   - enabled: 1
     path: Assets/Scenes/Level 4 - Finale.unity
