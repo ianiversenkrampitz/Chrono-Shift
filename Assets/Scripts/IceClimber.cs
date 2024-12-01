@@ -17,7 +17,7 @@ public class IceClimber : MonoBehaviour
     public float swingForce;
     public bool grappleToggle = true;
     public Vector3 grapplePoint;
-    public Vector3 pointDirection;
+    public Vector3 sphereCenter;
     public Material ropeMat;
     public LineRenderer lineRenderer;
     public SpringJoint joint;
@@ -42,6 +42,7 @@ public class IceClimber : MonoBehaviour
     // Update is called once every frame 
     public void Update()
     {
+        sphereCenter = transform.position + mainCam.transform.forward * sphereRadius * .5f;
         //can only be used in midair 
         if (!controller.onGround)
         {
@@ -79,15 +80,32 @@ public class IceClimber : MonoBehaviour
     private void Grapple()
     {
         // Create a sphere around the player’s position with a given radius
-        Collider[] hitColliders = Physics.OverlapSphere(transform.position, sphereRadius);
+        Collider[] hitColliders = Physics.OverlapSphere(sphereCenter, sphereRadius);
+
+        Collider closestPoint = null;
+        float closestDistance = float.MaxValue;
 
         // Check each collider within the sphere
         foreach (Collider hitCollider in hitColliders)
         {
             if (hitCollider.CompareTag("Grapple"))
             {
+                //check distance from point
+                distanceFromPoint = Vector3.Distance(transform.position, hitCollider.transform.position);
+
+                //if point is closer than another in range, use this one 
+                if (distanceFromPoint < closestDistance)
+                {
+                    closestDistance = distanceFromPoint;
+                    closestPoint = hitCollider;
+                }
+            }
+        }
+            //check if loop is done and point is found 
+            if (closestPoint != null)
+            {
                 //set pointposition to this point's position 
-                grapplePoint = hitCollider.transform.position;
+                grapplePoint = closestPoint.transform.position;
                 joint = gameObject.AddComponent<SpringJoint>();
                 joint.autoConfigureConnectedAnchor = false;
                 joint.connectedAnchor = grapplePoint;
@@ -102,9 +120,7 @@ public class IceClimber : MonoBehaviour
 
                 grappleToggle = false;
                 controller.grappling = true;
-                //break so it doesnt choose multiple points if more than one is detected
                 Debug.Log("Grapple point detected");
-                break;
             }
             else
             {
@@ -112,7 +128,6 @@ public class IceClimber : MonoBehaviour
                 controller.grappling = false;
                 Debug.Log("No grapple point detected");
             }
-        }
     }
 
     /// <summary>
@@ -162,7 +177,7 @@ public class IceClimber : MonoBehaviour
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(transform.position, sphereRadius);
+        Gizmos.DrawWireSphere(sphereCenter, sphereRadius);
     }
 
     /// <summary>
