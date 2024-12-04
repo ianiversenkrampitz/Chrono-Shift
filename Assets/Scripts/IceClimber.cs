@@ -157,6 +157,7 @@ public class IceClimber : MonoBehaviour
 
         if (forceDirection != Vector3.zero)
         {
+            controller.grappleDirection = forceDirection.normalized;
             controller.rigidBodyRef.AddForce(forceDirection.normalized * swingForce * Time.deltaTime, ForceMode.Force);
         }
     }

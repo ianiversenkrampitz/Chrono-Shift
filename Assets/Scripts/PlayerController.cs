@@ -87,6 +87,7 @@ public class PlayerController : MonoBehaviour
     public Vector3 direction;
     // transform player first spawns at
     public Vector3 startPosition;
+    public Vector3 grappleDirection;
 
     // reference to camera
     [SerializeField] private Transform mainCam;
@@ -223,6 +224,12 @@ public class PlayerController : MonoBehaviour
         {
             Quaternion toRotation = Quaternion.LookRotation(direction, Vector3.up);
             model.rotation = Quaternion.RotateTowards(model.rotation, toRotation, 720 * Time.deltaTime);
+        }
+        //make model look in direction player is heading while grappling 
+        else if (grappling)
+        {
+            Quaternion toGrappleRotation = Quaternion.LookRotation(grappleDirection, Vector3.up);
+            model.rotation = Quaternion.RotateTowards(model.rotation, toGrappleRotation, 720 * Time.deltaTime);
         }
     }
 

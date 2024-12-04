@@ -26,12 +26,24 @@ public class Dash : MonoBehaviour
         // if cooldown has ended and player presses dash, dash 
         if (controller.dashInput && !controller.dashCooldown)
         {
-            // apply force
-            controller.rigidBodyRef.AddForce(controller.direction * controller.dashForce, ForceMode.Impulse);
+            if (!controller.grappling)
+            {
+                // apply force
+                controller.rigidBodyRef.AddForce(controller.direction * controller.dashForce, ForceMode.Impulse);
 
-            //begin dash timers
-            StartCoroutine(DashTimer());
-            StartCoroutine(DashCooldownTimer());
+                //begin dash timers
+                StartCoroutine(DashTimer());
+                StartCoroutine(DashCooldownTimer());
+            }
+            else
+            {
+                // apply force
+                controller.rigidBodyRef.AddForce(controller.grappleDirection * controller.dashForce, ForceMode.Impulse);
+
+                //begin dash timers
+                StartCoroutine(DashTimer());
+                StartCoroutine(DashCooldownTimer());
+            }
         }
         // ensure dash input is off
         controller.dashInput = false;
