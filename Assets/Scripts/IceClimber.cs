@@ -15,7 +15,6 @@ public class IceClimber : MonoBehaviour
     public float ropeLength;
     public float distanceFromPoint;
     public float swingForce;
-    public bool grappleToggle = true;
     public Vector3 grapplePoint;
     public Vector3 sphereCenter;
     public Material ropeMat;
@@ -47,31 +46,25 @@ public class IceClimber : MonoBehaviour
         if (!controller.onGround)
         {
             //if input works and can grapple, toggle 
-            if (Input.GetKeyDown(KeyCode.F) && grappleToggle)
+            if (Input.GetKeyDown(KeyCode.F))
             {
                 Grapple();
-                Debug.Log("Pressed mouse down, grappling");
+                Debug.Log("Pressed button down, grappling");
             }
-            else if (Input.GetKeyDown(KeyCode.F) && !grappleToggle)
+            //if let go of button stop grappling 
+            else if (Input.GetKeyUp(KeyCode.F))
             {
-                Debug.Log("Pressed mouse down, stop grappling");
+                Debug.Log(" let go of button, stop grappling");
                 StopGrappling();
             }
         }
-        //if pressed again disconnect regardless 
-        else
-        {
-            StopGrappling();
-        }
         //if grappling, use movement
-        if (!grappleToggle)
+        if (controller.grappling)
         {
             GrappleMove();
         }
-        
-        
+         
         UpdateLineRenderer();
-       
     }
 
     /// <summary>
@@ -118,13 +111,11 @@ public class IceClimber : MonoBehaviour
                 joint.damper = 7f;
                 joint.massScale = 4.5f;
 
-                grappleToggle = false;
                 controller.grappling = true;
                 Debug.Log("Grapple point detected");
             }
             else
             {
-                grappleToggle = true;
                 controller.grappling = false;
                 Debug.Log("No grapple point detected");
             }
@@ -168,7 +159,6 @@ public class IceClimber : MonoBehaviour
     private void StopGrappling()
     {
         Destroy(joint);
-        grappleToggle = true;
         controller.grappling = false;
     }
 

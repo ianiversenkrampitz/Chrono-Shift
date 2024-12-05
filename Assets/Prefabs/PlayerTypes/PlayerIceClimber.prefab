@@ -385,7 +385,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ca760b0dcc2cd954fba0fe3922781c05, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  spawnPoint: {x: 0, y: 0, z: 0}
+  spawnPoint: {x: 30.3, y: 11.16, z: 96.6}
   controller: {fileID: 4892398426438860387}
 --- !u!114 &4892398426438860387
 MonoBehaviour:
@@ -440,6 +440,7 @@ MonoBehaviour:
   pink: {fileID: 2100000, guid: f1f41e98c2eb37e49bb9c35eea9581c9, type: 2}
   direction: {x: 0, y: 0, z: 0}
   startPosition: {x: 0, y: 0, z: 0}
+  grappleDirection: {x: 0, y: 0, z: 0}
   mainCam: {fileID: 0}
   vectorWASD: {x: 0, y: 0}
 --- !u!114 &5499834603562158674
@@ -459,7 +460,6 @@ MonoBehaviour:
   ropeLength: 0
   distanceFromPoint: 0
   swingForce: 300
-  grappleToggle: 0
   grapplePoint: {x: 0, y: 0, z: 0}
   sphereCenter: {x: 0, y: 0, z: 0}
   ropeMat: {fileID: 2100000, guid: 7e3c00fc067860e449c5aeea634483a6, type: 2}

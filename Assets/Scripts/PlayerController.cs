@@ -226,7 +226,7 @@ public class PlayerController : MonoBehaviour
             model.rotation = Quaternion.RotateTowards(model.rotation, toRotation, 720 * Time.deltaTime);
         }
         //make model look in direction player is heading while grappling 
-        else if (grappling)
+        else if (grappling && grappleDirection != Vector3.zero)
         {
             Quaternion toGrappleRotation = Quaternion.LookRotation(grappleDirection, Vector3.up);
             model.rotation = Quaternion.RotateTowards(model.rotation, toGrappleRotation, 720 * Time.deltaTime);
