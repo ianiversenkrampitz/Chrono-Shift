@@ -266,7 +266,7 @@ MonoBehaviour:
   glideSpeed: 85
   slowSpeed: 1.25
   gravitySpeed: 35
-  glideGravity: 7
+  glideGravity: 6
   grappleGravity: 1
   jumpForce: 20
   dashForce: 50
@@ -278,9 +278,9 @@ MonoBehaviour:
   dashCoolTime: 2
   health: 3
   maxHealth: 3
+  inputtingJumpInputDelay: 0.25
+  landingJumpInputDelay: 0.4
   score: 0
-  landingJumpInputDelay: 0.25
-  inputtingJumpInputDealy: 0.15
   onGround: 0
   moving: 0
   sprinting: 0
@@ -297,17 +297,17 @@ MonoBehaviour:
   rigidBodyRef: {fileID: 3860294296213440912}
   model: {fileID: 5574863083020354778}
   capsule: {fileID: 6139636176729202459}
+  direction: {x: 0, y: 0, z: 0}
+  startPosition: {x: 0, y: 0, z: 0}
+  grappleDirection: {x: 0, y: 0, z: 0}
+  vectorWASD: {x: 0, y: 0}
   red: {fileID: 2100000, guid: 346b29f08cd1bbc4cb1791174bc823c2, type: 2}
   green: {fileID: 2100000, guid: f0ca8cf9bd4c22e4f8f9a2b638170936, type: 2}
   blue: {fileID: 2100000, guid: 77ea20e09b775174dbc4b06effe2f915, type: 2}
   silver: {fileID: 2100000, guid: 7e47c2c8d6e6e0640b01693c19c98f17, type: 2}
   purple: {fileID: 2100000, guid: 362e703765b2b8844bf381b63bbcf3be, type: 2}
   pink: {fileID: 2100000, guid: f1f41e98c2eb37e49bb9c35eea9581c9, type: 2}
-  direction: {x: 0, y: 0, z: 0}
-  startPosition: {x: 0, y: 0, z: 0}
-  grappleDirection: {x: 0, y: 0, z: 0}
   mainCam: {fileID: 0}
-  vectorWASD: {x: 0, y: 0}
 --- !u!1 &2912317763306672002
 GameObject:
   m_ObjectHideFlags: 0

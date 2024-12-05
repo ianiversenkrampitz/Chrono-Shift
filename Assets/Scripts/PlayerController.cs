@@ -9,7 +9,7 @@ using UnityEngine.InputSystem.XR;
 /// <summary>
 /// Monaghan, Devin
 /// Iversen-Krampitz, Ian 
-/// 11/18/2024
+/// 12/5/2024
 /// holds major variables
 /// handles WASD movement
 /// handles model alignment
@@ -29,7 +29,7 @@ public class PlayerController : MonoBehaviour
     public float slowSpeed = 1.25f;
     // gravity speed
     public float gravitySpeed = 35f;
-    public float glideGravity = 7f;
+    public float glideGravity = 6f;
     public float grappleGravity = 1f;
     // power of impulses
     public float jumpForce = 20f;
@@ -46,9 +46,12 @@ public class PlayerController : MonoBehaviour
     public float health = 3f;
     // player's max health
     public float maxHealth = 3f;
+    // # of seconds of the jump input delay
+    public float inputtingJumpInputDelay = .25f;
+    public float landingJumpInputDelay = .4f;
+
     // player's score
     public int score = 0;
-
 
     // is the player on the ground?
     public bool onGround;
@@ -78,25 +81,26 @@ public class PlayerController : MonoBehaviour
     public Transform model;
     // reference to capsule's renderer
     public Renderer capsule;
-    // references to different color materials
-    public Material red;
-    public Material green;
-    public Material blue;
-    public Material silver;
-    public Material purple;
-    public Material pink;
-
+    
     // direction holds movement inputs converted into Vector3
     public Vector3 direction;
     // transform player first spawns at
     public Vector3 startPosition;
     public Vector3 grappleDirection;
 
-    // reference to camera
-    [SerializeField] private Transform mainCam;
-
     // holds movement inputs
     public Vector2 vectorWASD;
+
+    // references to different color materials
+    [SerializeField] private Material red;
+    [SerializeField] private Material green;
+    [SerializeField] private Material blue;
+    [SerializeField] private Material silver;
+    [SerializeField] private Material purple;
+    [SerializeField] private Material pink;
+
+    // reference to camera
+    [SerializeField] private Transform mainCam;
 
     // Awake is called before the first frame update
     void Awake()
@@ -398,6 +402,13 @@ public class PlayerController : MonoBehaviour
         jumpInput = false;
     }
 
+    IEnumerator JumpInputDelay(float delayTime)
+    {
+        jumpInputDelay = true;
+        yield return new WaitForSeconds(delayTime);
+        jumpInputDelay = false;
+    }
+
     // sets player color differently depending on what action they are performing
     private void ColorChange()
     {
@@ -450,7 +461,6 @@ public class PlayerController : MonoBehaviour
         {
             sprintInput = true;
         }
-        // only detect jump input when jump input delay is off
         if (playerInputActions.PlayerActions.Jump.IsPressed())
         {
             jumpInput = true;
