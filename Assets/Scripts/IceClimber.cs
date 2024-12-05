@@ -10,11 +10,11 @@ using UnityEngine;
 
 public class IceClimber : MonoBehaviour
 {
-    public float sphereRadius;
-    public float sphereMaxDistance;
-    public float ropeLength;
-    public float distanceFromPoint;
-    public float swingForce;
+    public float sphereRadius = 12f;
+    public float sphereMaxDistance = 14f;
+    public float ropeLength = 0f;
+    public float distanceFromPoint = 0f;
+    public float swingForce = 300f;
     public Vector3 grapplePoint;
     public Vector3 sphereCenter;
     public Material ropeMat;
