@@ -8146,21 +8146,6 @@ PrefabInstance:
       propertyPath: mainCam
       value: 
       objectReference: {fileID: 894546652}
-    - target: {fileID: 7050806802731886738, guid: 0b097b36474d88f43bcd32db5ca49069,
-        type: 3}
-      propertyPath: spawnPoint.x
-      value: 30.3
-      objectReference: {fileID: 0}
-    - target: {fileID: 7050806802731886738, guid: 0b097b36474d88f43bcd32db5ca49069,
-        type: 3}
-      propertyPath: spawnPoint.y
-      value: 11.16
-      objectReference: {fileID: 0}
-    - target: {fileID: 7050806802731886738, guid: 0b097b36474d88f43bcd32db5ca49069,
-        type: 3}
-      propertyPath: spawnPoint.z
-      value: 96.6
-      objectReference: {fileID: 0}
     - target: {fileID: 7058973513214097587, guid: 0b097b36474d88f43bcd32db5ca49069,
         type: 3}
       propertyPath: m_Name
@@ -18948,7 +18933,7 @@ PrefabInstance:
     - target: {fileID: 982879091187365298, guid: ef79a4b9a36ca8d4da890112356111e3,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 18.999573
+      value: 18.999512
       objectReference: {fileID: 0}
     - target: {fileID: 3310820005589546395, guid: ef79a4b9a36ca8d4da890112356111e3,
         type: 3}

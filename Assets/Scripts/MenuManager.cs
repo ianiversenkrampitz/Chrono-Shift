@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using TMPro;
 
 /// <summary>
 /// Monaghan, Devin
@@ -14,7 +15,17 @@ public class MenuManager : MonoBehaviour
 {
     // # of the current scene in the build index
     public int moveToScene = 0;
-
+    public static int score;
+    public static int nextScene;
+    public TMP_Text endScore;
+    private void Start()
+    {
+       if (endScore != null)
+       {
+            endScore.text = ("Score: " + score.ToString());
+       }
+        nextScene = 1;
+    }
     // quits game
     public void Quit()
     {
@@ -22,9 +33,22 @@ public class MenuManager : MonoBehaviour
         print("Player has quit game");
     }
 
-    // moves to scene number sceneNumber in the build index
-    public void SelectScene(int sceneNumber)
+   /// <summary>
+   /// move to intermission screen and save score and scene number
+   /// </summary>
+   /// <param name="levelScore"></param>
+    public void SelectScene(int levelScore)
     {
-        SceneManager.LoadScene(sceneNumber);
+        //sets static int to correct scene so intermission knows whats next 
+       
+        nextScene = moveToScene;
+        score = levelScore;
+        //loads intermission 
+        SceneManager.LoadScene(6);
+    }
+
+    public void NextLevel()
+    {
+        SceneManager.LoadScene(nextScene);
     }
 }

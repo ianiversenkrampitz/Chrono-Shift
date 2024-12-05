@@ -47,7 +47,7 @@ public class PlayerController : MonoBehaviour
     // player's max health
     public float maxHealth = 3f;
     // player's score
-    public float score = 0f;
+    public int score = 0;
 
     // is the player on the ground?
     public bool onGround;

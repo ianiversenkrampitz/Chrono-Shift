@@ -60,10 +60,10 @@ public class Collision : MonoBehaviour
             controller.score++;
         }
 
-        // if the player collides with the level end object, move them to the next level
+        // if the player collides with the level end object, move them to the intermission scene
         if (other.gameObject.CompareTag("Level End"))
         {
-            other.GetComponent<MenuManager>().SelectScene(other.GetComponent<MenuManager>().moveToScene);
+            other.GetComponent<MenuManager>().SelectScene(controller.score);
         }
     }
 
@@ -106,10 +106,10 @@ public class Collision : MonoBehaviour
         // reset player health
         controller.health = controller.maxHealth;
         // subtract 3 from score, disallowing it to go below 0
-        controller.score -= 3f;
-        if (controller.score < 0f)
+        controller.score -= 3;
+        if (controller.score < 0)
         {
-            controller.score = 0f;
+            controller.score = 0;
         }
     }
 
