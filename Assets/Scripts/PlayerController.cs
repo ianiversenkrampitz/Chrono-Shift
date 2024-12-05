@@ -220,7 +220,7 @@ public class PlayerController : MonoBehaviour
     private void ModelAlign()
     {
         // make model look in direction player is heading when moving
-        if (Moving())
+        if (Moving() && direction != Vector3.zero) //added vector3.zero check to get rid of error message in console
         {
             Quaternion toRotation = Quaternion.LookRotation(direction, Vector3.up);
             model.rotation = Quaternion.RotateTowards(model.rotation, toRotation, 720 * Time.deltaTime);
