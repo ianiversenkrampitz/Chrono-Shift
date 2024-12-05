@@ -4,7 +4,7 @@ using UnityEngine;
 
 /// <summary>
 /// Monaghan, Devin
-/// 10/29/2024
+/// 12/3/2024
 /// handles glide input
 /// </summary>
 
@@ -21,29 +21,33 @@ public class Glide : MonoBehaviour
 
     public void Gliding()
     {
-        if (controller.glideInput && !controller.onGround && !controller.grappling)
+        // if the player inputs glide for the first time, normalize the vertical velocity
+
+        // if the controller is inputting the glide, is off the ground, and not gliding
+        if (controller.glideInput && !controller.onGround && !controller.grappling && !controller.jumpInputDelay)
         {
             controller.gliding = true;
             print("player is gliding");
+        }
+        if (!controller.glideInput)
+        {
+            controller.gliding = false;
+        }
+        if (controller.onGround)
+        {
+            controller.gliding = false;
+        }
+        if (controller.grappling)
+        {
+            controller.gliding = false;
+        }
+    }
 
-            // halt upward momentum
-            Vector3 clampedVelocity = controller.rigidBodyRef.velocity.normalized;
-            controller.rigidBodyRef.velocity = new Vector3(controller.rigidBodyRef.velocity.x,
-                0f, controller.rigidBodyRef.velocity.z);
-        }
-        else if (!controller.Moving())
-        {
-            controller.gliding = false;
-        }
-        else if (controller.onGround)
-        {
-            controller.gliding = false;
-        }
-        else if (controller.grappling)
-        {
-            controller.gliding = false;
-        }
-        // ensure glide input is off
-        controller.glideInput = false;
+   IEnumerator GravityDelay()
+    {
+        print("player began glide");
+        yield return new WaitForSeconds(.25f);
+        controller.gliding = true;
+        print("glide gravity begun");
     }
 }

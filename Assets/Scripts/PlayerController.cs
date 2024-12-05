@@ -23,23 +23,23 @@ using UnityEngine.InputSystem.XR;
 public class PlayerController : MonoBehaviour
 {
     // movement speeds
-    public float walkSpeed = 50f;
-    public float sprintSpeed = 100f;
-    public float glideSpeed = 90f;
-    public float slowSpeed = .01f;
+    public float walkSpeed = 70f;
+    public float sprintSpeed = 85f;
+    public float glideSpeed = 85f;
+    public float slowSpeed = 1.25f;
     // gravity speed
-    public float gravitySpeed = 15f;
-    public float glideGravity = 5f;
+    public float gravitySpeed = 35f;
+    public float glideGravity = 7f;
     public float grappleGravity = 1f;
     // power of impulses
     public float jumpForce = 20f;
-    public float dashForce = 30f;
-    public float sprintForce = 2f;
+    public float dashForce = 50f;
+    public float sprintForce = 3f;
     // maximum velocities
-    public float walkMaxVelocity = 2f;
-    public float sprintMaxVelocity = 4f;
+    public float walkMaxVelocity = 13f;
+    public float sprintMaxVelocity = 18f;
     public float glideMaxVelocity = 6f;
-    public float gravityMaxVelocity = 30f;
+    public float gravityMaxVelocity = 50f;
     // # of seconds of dash cooldown
     public float dashCoolTime = 2f;
     // player's current health
@@ -48,6 +48,7 @@ public class PlayerController : MonoBehaviour
     public float maxHealth = 3f;
     // player's score
     public int score = 0;
+
 
     // is the player on the ground?
     public bool onGround;
@@ -66,6 +67,8 @@ public class PlayerController : MonoBehaviour
     public bool glideInput = false;
     public bool sprintInput = false;
     public bool jumpInput = false;
+    // is the player's jump input on delay?
+    public bool jumpInputDelay = false;
 
     // reference to rigidbody
     public Rigidbody rigidBodyRef;
@@ -184,6 +187,7 @@ public class PlayerController : MonoBehaviour
                     clampedVelocity = rigidBodyRef.velocity.normalized * sprintMaxVelocity;
                     rigidBodyRef.velocity = new Vector3(clampedVelocity.x, rigidBodyRef.velocity.y, clampedVelocity.z);
                 }
+            //    print("player is sprinting");
             }
             // move at glide speed if gliding
             else if (gliding)
@@ -198,6 +202,7 @@ public class PlayerController : MonoBehaviour
                     clampedVelocity = rigidBodyRef.velocity.normalized * glideMaxVelocity;
                     rigidBodyRef.velocity = new Vector3(clampedVelocity.x, rigidBodyRef.velocity.y, clampedVelocity.z);
                 }
+              //  print("player is gliding");
             }
             // move at walk speed
             else
@@ -316,6 +321,13 @@ public class PlayerController : MonoBehaviour
         if (Physics.Raycast(transform.position, Vector3.down, out hit, 1.505f))
         {
             onGround = true;
+            // if the player is going onto the ground from gliding, prevent them from jumping briefly
+            // so that they don't immediatley jump from inputting glide
+            if (gliding)
+            {
+                // begin jump input delay
+                StartCoroutine(JumpInputDelay(landingJumpInputDelay));
+            }
         }
         else
         {
@@ -326,9 +338,10 @@ public class PlayerController : MonoBehaviour
     // if the player is not on the ground apply force down
     private void Gravity()
     {
-        // if gliding apply reduced gravity
+        // if gliding apply reduced & constant gravity
         if (gliding)
         {
+            print("player is taking glide gravity");
             // turn off physics gravity when not on ground
             rigidBodyRef.useGravity = false;
 
@@ -365,15 +378,20 @@ public class PlayerController : MonoBehaviour
     private void Jump()
     {
         // if the player is on the ground and presses the spacebar, jump
-        if (onGround && jumpInput)
+        if (onGround && jumpInput && !jumpInputDelay)
         {
             // apply impulse up
             rigidBodyRef.AddForce(model.up * jumpForce, ForceMode.Impulse);
+            print("jump force was applied");
+            // begin jump input delay
+            StartCoroutine(JumpInputDelay(inputtingJumpInputDelay));
         }
-        else if (!onGround && jumpInput && grappling)
+        else if (!onGround && jumpInput && !jumpInputDelay && grappling)
         {
             // apply impulse up
             rigidBodyRef.AddForce(model.up * jumpForce, ForceMode.Impulse);
+            // begin jump input delay
+            StartCoroutine(JumpInputDelay(inputtingJumpInputDelay));
         }
 
         // ensure jump input is off
@@ -424,10 +442,15 @@ public class PlayerController : MonoBehaviour
         {
             glideInput = true;
         }
+        if (!playerInputActions.PlayerActions.Glide.IsPressed())
+        {
+            glideInput = false;
+        }
         if (playerInputActions.PlayerActions.Sprint.IsPressed())
         {
             sprintInput = true;
         }
+        // only detect jump input when jump input delay is off
         if (playerInputActions.PlayerActions.Jump.IsPressed())
         {
             jumpInput = true;
