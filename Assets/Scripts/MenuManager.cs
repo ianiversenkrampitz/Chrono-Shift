@@ -24,7 +24,6 @@ public class MenuManager : MonoBehaviour
        {
             endScore.text = ("Score: " + score.ToString());
        }
-        nextScene = 1;
     }
     // quits game
     public void Quit()
