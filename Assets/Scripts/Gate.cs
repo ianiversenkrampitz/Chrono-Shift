@@ -23,7 +23,7 @@ public class Gate : MonoBehaviour
     public void OnCollisionEnter(UnityEngine.Collision collision)
     {
         // if this is a key, set this false and increase keycount
-        if (collision.gameObject.CompareTag("Player") && !isGate)
+        if (collision.gameObject.CompareTag("PlayerTag") && !isGate)
         {
             keyNum++;
             Debug.Log("keys:" + keyNum);

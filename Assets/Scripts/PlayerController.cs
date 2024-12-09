@@ -107,6 +107,9 @@ public class PlayerController : MonoBehaviour
     {
         // hide cursor
         Cursor.visible = false;
+        // set cursor to center of screen
+        var mouse = Mouse.current;
+        mouse.WarpCursorPosition(new Vector2(Screen.width / 2, Screen.height / 2));
 
         // set startPosition
         startPosition = transform.position;

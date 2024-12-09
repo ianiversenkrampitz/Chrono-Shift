@@ -62,7 +62,7 @@ public class MovingPlatform : MonoBehaviour
     // if player steps on platform, make them a child so that they move with the platform
     void OnCollisionEnter(UnityEngine.Collision collision)
     {
-       if (collision.gameObject.CompareTag("Player"))
+       if (collision.gameObject.CompareTag("PlayerTag"))
        {
             collision.transform.parent = transform;
         }
@@ -71,7 +71,7 @@ public class MovingPlatform : MonoBehaviour
     // if player gets off platform, unchild them so they stop moving with the platform
     void OnCollisionExit(UnityEngine.Collision collision)
     {
-        if (collision.gameObject.CompareTag("Player"))
+        if (collision.gameObject.CompareTag("PlayerTag"))
         {
             collision.transform.parent = null;
         }

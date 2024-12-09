@@ -16,6 +16,7 @@ TagManager:
   - Grapple
   - Level End
   - Hurt
+  - PlayerTag
   layers:
   - Default
   - TransparentFX

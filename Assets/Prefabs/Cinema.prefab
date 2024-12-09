@@ -59,10 +59,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_BindingMode: 5
-  m_FollowOffset: {x: 0, y: 3, z: -7.9}
+  m_FollowOffset: {x: 0, y: 3, z: -6.81}
   m_XDamping: 1
-  m_YDamping: 1
-  m_ZDamping: 1
+  m_YDamping: 0.5
+  m_ZDamping: 0.5
   m_AngularDampingMode: 0
   m_PitchDamping: 0
   m_YawDamping: 0
@@ -188,8 +188,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2476933047399308451}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.024753252, y: 0.000000034669938, z: -8.5845675e-10, w: 0.9996936}
-  m_LocalPosition: {x: 0, y: 2.5, z: 1.1000004}
+  m_LocalRotation: {x: 0.033245366, y: -0.002546142, z: 0.00008469451, w: 0.999444}
+  m_LocalPosition: {x: 0.014697075, y: 3.581, z: -1.2499123}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -357,7 +357,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2518630753340418708}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.024753258, y: 0.000000017334969, z: -4.2922849e-10, w: 0.99969363}
+  m_LocalRotation: {x: 0.03324537, y: -0.0025461249, z: 0.000084693944, w: 0.999444}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -436,8 +436,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6404849340988963899}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.037564665, y: -0.71185976, z: 0.038186044, w: 0.700276}
-  m_LocalPosition: {x: 7.898937, y: 0, z: 8.029599}
+  m_LocalRotation: {x: 0.062047042, y: -0.0025425898, z: 0.00015806526, w: 0.99807}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -500,6 +500,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4211868381719074339}
   - component: {fileID: 3456354526037595366}
+  - component: {fileID: 2681095389658548283}
   m_Layer: 0
   m_Name: FreeCam
   m_TagString: Untagged
@@ -516,7 +517,7 @@ Transform:
   m_GameObject: {fileID: 6888170194487043943}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 2.5, z: 1.1000004}
+  m_LocalPosition: {x: 0.014697075, y: 3.581, z: -1.2499123}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -617,19 +618,49 @@ MonoBehaviour:
     m_LegacyHeadingDefinition: -1
     m_LegacyVelocityFilterStrength: -1
   m_BindingMode: 5
-  m_SplineCurvature: 0.2
+  m_SplineCurvature: 0.147
   m_Orbits:
-  - m_Height: 4.5
-    m_Radius: 6.56
+  - m_Height: 6.35
+    m_Radius: 2.94
   - m_Height: 3
-    m_Radius: 7.9
-  - m_Height: 1.3
-    m_Radius: 7.07
+    m_Radius: 6.81
+  - m_Height: -0.59
+    m_Radius: 4.22
   m_LegacyHeadingBias: 3.4028235e+38
   m_Rigs:
   - {fileID: 8202561324135897973}
   - {fileID: 9169809829438791234}
   - {fileID: 265491648013468404}
+--- !u!114 &2681095389658548283
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6888170194487043943}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e501d18bb52cf8c40b1853ca4904654f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_CollideAgainst:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IgnoreTag: 
+  m_TransparentLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_MinimumDistanceFromTarget: 0.1
+  m_AvoidObstacles: 1
+  m_DistanceLimit: 0
+  m_MinimumOcclusionTime: 0
+  m_CameraRadius: 0.1
+  m_Strategy: 0
+  m_MaximumEffort: 4
+  m_SmoothingTime: 0
+  m_Damping: 0
+  m_DampingWhenOccluded: 0
+  m_OptimalTargetDistance: 0
 --- !u!1 &8435417992618060324
 GameObject:
   m_ObjectHideFlags: 0
@@ -689,10 +720,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_BindingMode: 5
-  m_FollowOffset: {x: 0, y: 3, z: -7.9}
+  m_FollowOffset: {x: 0, y: 3, z: -6.81}
   m_XDamping: 1
-  m_YDamping: 1
-  m_ZDamping: 1
+  m_YDamping: 0.5
+  m_ZDamping: 0.5
   m_AngularDampingMode: 0
   m_PitchDamping: 0
   m_YawDamping: 0
@@ -816,10 +847,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_BindingMode: 5
-  m_FollowOffset: {x: 0, y: 3, z: -7.9}
+  m_FollowOffset: {x: 0, y: 3, z: -6.81}
   m_XDamping: 1
-  m_YDamping: 1
-  m_ZDamping: 1
+  m_YDamping: 0.5
+  m_ZDamping: 0.5
   m_AngularDampingMode: 0
   m_PitchDamping: 0
   m_YawDamping: 0
@@ -909,7 +940,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 9200095152402165328}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.003889156, y: 0.000000017390084, z: 6.763327e-11, w: 0.99999243}
+  m_LocalRotation: {x: 0.004606622, y: -0.00254749, z: 0.000011735484, w: 0.9999862}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0

@@ -34,7 +34,7 @@ public class Text : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         // checks if hitting the player, if so show box and set text
-        if (other.gameObject.CompareTag("Player"))
+        if (other.gameObject.CompareTag("PlayerTag"))
         {
             Debug.Log("hit a text trigger");
             textManager.displaying = true;
@@ -48,7 +48,7 @@ public class Text : MonoBehaviour
     private void OnTriggerExit(Collider other)
     {
         //if exiting trigger, set text to false or start timer if timed box
-        if (other.gameObject.CompareTag("Player"))
+        if (other.gameObject.CompareTag("PlayerTag"))
         {
             textManager.displaying = false;
 
