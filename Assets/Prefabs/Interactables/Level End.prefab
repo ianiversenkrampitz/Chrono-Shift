@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 2286756941100486121}
   - component: {fileID: 8778931189160104643}
   - component: {fileID: 2572908471493461061}
-  - component: {fileID: 2765412392535402397}
+  - component: {fileID: 7940379954637413047}
   m_Layer: 0
   m_Name: Model
   m_TagString: Level End
@@ -106,7 +106,7 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &2765412392535402397
+--- !u!114 &7940379954637413047
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -118,7 +118,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0e8a709a7fa82cd4aa60212e2ee984b4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  thisScene: 0
+  moveToScene: 0
+  endScore: {fileID: 0}
 --- !u!1 &6076141297618790547
 GameObject:
   m_ObjectHideFlags: 0
