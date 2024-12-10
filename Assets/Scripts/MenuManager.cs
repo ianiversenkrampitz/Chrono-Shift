@@ -52,6 +52,11 @@ public class MenuManager : MonoBehaviour
 
     public void MoveToScene()
     {
+        //check if theres no value for nextscene so title screen works 
+        if (nextScene == 0)
+        {
+            nextScene = moveToScene;
+        }
         SceneManager.LoadScene(nextScene);
     }
 }
