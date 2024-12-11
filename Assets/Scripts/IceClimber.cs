@@ -46,7 +46,7 @@ public class IceClimber : MonoBehaviour
         if (!controller.onGround)
         {
             //if input works and can grapple, toggle 
-            if (Input.GetKeyDown(KeyCode.F))
+            if (Input.GetMouseButtonDown(0))
             {
                 Grapple();
                 Debug.Log("Pressed button down, grappling");
@@ -54,7 +54,7 @@ public class IceClimber : MonoBehaviour
         }
 
         //if let go of button stop grappling 
-        if (Input.GetKeyUp(KeyCode.F))
+        if (Input.GetMouseButtonUp(0))
         {
             Debug.Log(" let go of button, stop grappling");
             StopGrappling();
