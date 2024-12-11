@@ -51,13 +51,15 @@ public class IceClimber : MonoBehaviour
                 Grapple();
                 Debug.Log("Pressed button down, grappling");
             }
-            //if let go of button stop grappling 
-            else if (Input.GetKeyUp(KeyCode.F))
-            {
-                Debug.Log(" let go of button, stop grappling");
-                StopGrappling();
-            }
         }
+
+        //if let go of button stop grappling 
+        if (Input.GetKeyUp(KeyCode.F))
+        {
+            Debug.Log(" let go of button, stop grappling");
+            StopGrappling();
+        }
+
         //if grappling, use movement
         if (controller.grappling)
         {
