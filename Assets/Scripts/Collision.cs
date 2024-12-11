@@ -63,7 +63,14 @@ public class Collision : MonoBehaviour
         // if the player collides with the level end object, move them to the intermission scene
         if (other.gameObject.CompareTag("Level End"))
         {
-            other.GetComponent<MenuManager>().SelectScene(controller.score);
+            if (other.GetComponent<MenuManager>().finaleLevel)
+            {
+                other.GetComponent<MenuManager>().FinishScene(controller.score);
+            }
+            else
+            {
+                other.GetComponent<MenuManager>().SelectScene(controller.score);
+            }
         }
     }
 

@@ -21,6 +21,8 @@ public class MenuManager : MonoBehaviour
 
     public TMP_Text endScore;
 
+    public bool finaleLevel = false;
+
     private void Start()
     {
        if (endScore != null)
@@ -48,6 +50,16 @@ public class MenuManager : MonoBehaviour
         nextScene = moveToScene;
         //loads intermission 
         SceneManager.LoadScene(6);
+    }
+
+    public void FinishScene(int levelScore)
+    {
+        //sets static int to correct scene so intermission knows whats next 
+        // store score
+        score = levelScore;
+        nextScene = 1;
+        //loads intermission 
+        SceneManager.LoadScene(7);
     }
 
     public void MoveToScene()
